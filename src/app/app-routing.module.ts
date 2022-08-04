@@ -1,6 +1,6 @@
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { NotfoundComponent } from './demo/components/notfound/notfound.component';
+import { NotFoundComponent } from './layout/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 
 @NgModule({
@@ -12,9 +12,9 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
                     { path: '', loadChildren: () => import('./layout/components/datatable/datatable.module').then(m => m.DatatableModule) },
                 ],
             },
-            { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
-            { path: 'pages/notfound', component: NotfoundComponent },
-            { path: '**', redirectTo: 'pages/notfound' },
+            { path: 'auth', loadChildren: () => import('./layout/components/auth/auth.module').then(m => m.AuthModule) },
+            { path: 'notfound', component: NotFoundComponent },
+            { path: '**', redirectTo: 'notfound' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })
     ],
     exports: [RouterModule]
