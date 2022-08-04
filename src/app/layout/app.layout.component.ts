@@ -4,7 +4,6 @@ import { filter, Subscription } from 'rxjs';
 import { MenuService } from './app.menu.service';
 import { LayoutService } from "./service/app.layout.service";
 import { AppSidebarComponent } from "./app.sidebar.component";
-import { AppTopBarComponent } from './app.topbar.component';
 
 @Component({
     selector: 'app-layout',
@@ -22,7 +21,7 @@ export class AppLayoutComponent implements OnDestroy {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
-                    const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target) 
+                    const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target)
                         || event.target.classList.contains('p-trigger') || event.target.parentNode.classList.contains('p-trigger'));
 
                     if (isOutsideClicked) {
