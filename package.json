@@ -1,5 +1,5 @@
 {
-    "name": "sakai-ng",
+    "name": "mission_database_frontend",
     "version": "14.0.0",
     "scripts": {
         "ng": "ng",
