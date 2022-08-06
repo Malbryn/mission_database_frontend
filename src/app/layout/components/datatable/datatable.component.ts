@@ -1,8 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MissionService } from '../../service/mission.service';
 import { Mission } from '../../api/Mission';
+import { MissionFile } from '../../api/MissionFile';
 
 interface expandedRows {
     [key: string]: boolean;
@@ -10,25 +17,14 @@ interface expandedRows {
 
 @Component({
     templateUrl: './datatable.component.html',
+    styleUrls: ['./datatable-component.css'],
+    encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
-    styles: [
-        `
-            :host ::ng-deep .p-frozen-column {
-                font-weight: bold;
-            }
-
-            :host ::ng-deep .p-datatable-frozen-tbody {
-                font-weight: bold;
-            }
-
-            :host ::ng-deep .p-progressbar {
-                height: 0.5rem;
-            }
-        `,
-    ],
 })
 export class DatatableComponent implements OnInit {
     missions: Mission[] = [];
+
+    missionFiles: MissionFile[] = [];
 
     rowGroupMetadata: any;
 
@@ -48,6 +44,12 @@ export class DatatableComponent implements OnInit {
             this.loading = false;
             console.log(this.missions);
         });
+
+        // this.missionService.getMissionFiles().then((missionFiles) => {
+        //     this.missionFiles = missionFiles;
+        //     this.loading = false;
+        //     console.log(this.missionFiles);
+        // });
     }
 
     onSort() {
@@ -56,7 +58,18 @@ export class DatatableComponent implements OnInit {
 
     updateRowGroupMetaData() {}
 
-    expandAll() {}
+    expandAll() {
+        if (!this.isExpanded) {
+            this.missions.forEach((mission) =>
+                mission && mission.name
+                    ? (this.expandedRows[mission.name] = true)
+                    : ''
+            );
+        } else {
+            this.expandedRows = {};
+        }
+        this.isExpanded = !this.isExpanded;
+    }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal(

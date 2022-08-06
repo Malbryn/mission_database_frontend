@@ -4,6 +4,7 @@ import { User } from './User';
 import { Status } from './Status';
 import { Modset } from './Modset';
 import { DLC } from './DLC';
+import { MissionFile } from './MissionFile';
 
 export interface Mission {
     id?: number;
@@ -19,4 +20,5 @@ export interface Mission {
     modset?: Modset;
     dlc?: DLC;
     description?: string;
+    missionFiles?: MissionFile;
 }

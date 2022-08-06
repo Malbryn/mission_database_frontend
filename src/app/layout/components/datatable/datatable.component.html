@@ -2,10 +2,10 @@
     <div class="col-12">
         <div class="card">
             <h5>Filter Menu</h5>
-            <p-table #dt1 [value]="missions" dataKey="id" [rows]="10" [loading]="loading" [rowHover]="true"
-                     styleClass="p-datatable-gridlines" [paginator]="true"
-                     [globalFilterFields]="['name']"
-                     responsiveLayout="scroll">
+            <p-table #dt1 [value]="missions" dataKey="id" [expandedRowKeys]="expandedRows" [rows]="20"
+                     [loading]="loading" [rowHover]="true" [paginator]="true"
+                     [globalFilterFields]="['name', 'map', 'author']" responsiveLayout="scroll"
+            >
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
                         <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
@@ -19,13 +19,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>
-                            <div class="flex justify-content-between align-items-center">
-                                ID
-                                <p-columnFilter type="text" field="id" display="menu"
-                                                placeholder="Search by id"></p-columnFilter>
-                            </div>
-                        </th>
+                        <th style="width: 3rem"></th>
                         <th>
                             <div class="flex justify-content-between align-items-center">
                                 Name
@@ -70,17 +64,20 @@
                         </th>
                         <th>
                             <div class="flex justify-content-between align-items-center">
-                                DLC
-                                <p-columnFilter type="text" field="dlc" display="menu"
-                                                placeholder="Search by DLC"></p-columnFilter>
+                                Modset
+                                <p-columnFilter type="text" field="modset" display="menu"
+                                                placeholder="Search by modset"></p-columnFilter>
                             </div>
                         </th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-mission>
+                <ng-template pTemplate="body" let-mission let-expanded="expanded">
                     <tr>
-                        <td style="min-width: 12rem;">
-                            {{mission.id}}
+                        <td>
+                            <button type="button" pButton pRipple [pRowToggler]="mission"
+                                    class="p-button-text p-button-rounded p-button-plain"
+                                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                            </button>
                         </td>
                         <td style="min-width: 12rem;">
                             {{mission.name}}
@@ -98,24 +95,101 @@
                             {{mission.slots_max}}
                         </td>
                         <td style="min-width: 12rem;">
-                            {{mission.status.name}}
+                            <span [class]="'status-badge status-' + mission.status.name.toLowerCase()">{{mission.status.name}}</span>
                         </td>
                         <td style="min-width: 12rem;">
-                            {{mission.dlc[0].name}}
+                            {{mission.modset.name}}
                         </td>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="emptymessage">
+                <ng-template pTemplate="rowexpansion" let-mission>
                     <tr>
-                        <td colspan="7">No maps found.</td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="loadingbody">
-                    <tr>
-                        <td colspan="7">Loading maps data. Please wait.</td>
+                        <td colspan="7">
+                            <div class="p-3">
+                                <div class="font-medium text-3xl text-900 my-2">{{mission.name}}</div>
+                                <div class="surface-section">
+                                    <ul class="list-none p-0 m-0">
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Description</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.description}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Minimum slots</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.slots_min}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Maximum slots</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.slots_max}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Required DLC's</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                <p-chip *ngFor="let dlc of mission.dlc" [label]="dlc.name" class="mr-2"></p-chip>
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Created</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.created_at | date: 'yyyy-MM-dd, hh:mm a'}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Modset</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                <a [href]="mission.modset.link">{{mission.modset.name}}</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="font-medium text-3xl text-900 mt-4 mb-2">Mission Files</div>
+                                <div class="surface-section">
+                                    <ul class="list-none p-0 m-0">
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 surface-border flex-wrap">
+                                            <p-table class="w-100" [value]="mission.mission_files" dataKey="id" responsiveLayout="scroll">
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Version</th>
+                                                        <th>Notes</th>
+                                                        <th>Uploaded</th>
+                                                        <th style="width: 4rem"></th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-missionFile>
+                                                    <tr>
+                                                        <td>{{missionFile.name}}</td>
+                                                        <td>{{missionFile.version}}</td>
+                                                        <td>{{missionFile.notes}}</td>
+                                                        <td>{{missionFile.created_at | date: 'yyyy-MM-dd, hh:mm a'}}</td>
+                                                        <td><p-button type="button" icon="pi pi-download"></p-button></td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="emptymessage">
+                                                    <tr>
+                                                        <td colspan="7">No maps found.</td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="loadingbody">
+                                                    <tr>
+                                                        <td colspan="7">Loading maps data. Please wait.</td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </div>
 </div>
+
