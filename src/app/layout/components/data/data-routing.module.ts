@@ -29,7 +29,7 @@ import { RouterModule } from '@angular/router';
                     ),
             },
             {
-                path: 'data-files',
+                path: 'mission-files',
                 loadChildren: () =>
                     import('./mission-file/mission-file.module').then(
                         (m) => m.MissionFileModule
