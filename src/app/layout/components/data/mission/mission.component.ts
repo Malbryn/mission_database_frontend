@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { Mission } from '../../api/Mission';
+import { MissionService } from '../../../service/mission.service';
+import { Mission } from '../../../api/Mission';
 
 interface ExpandedRows {
     [key: string]: boolean;

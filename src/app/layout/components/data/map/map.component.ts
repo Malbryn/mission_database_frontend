@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { Status } from '../../api/Status';
+import { MissionService } from '../../../service/mission.service';
+import { Map } from '../../../api/Map';
 
 @Component({
-    templateUrl: './status.component.html',
+    templateUrl: './map.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class StatusComponent implements OnInit {
-    statuses: Status[] = [];
+export class MapComponent implements OnInit {
+    maps: Map[] = [];
     loading: boolean = true;
 
     @ViewChild('filter') filter!: ElementRef;
@@ -24,8 +24,8 @@ export class StatusComponent implements OnInit {
     constructor(private missionService: MissionService) {}
 
     ngOnInit() {
-        this.missionService.getStatuses().then((statuses) => {
-            this.statuses = statuses;
+        this.missionService.getMaps().then((maps) => {
+            this.maps = maps;
             this.loading = false;
         });
     }

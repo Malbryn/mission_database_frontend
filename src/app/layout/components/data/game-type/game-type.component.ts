@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { GameType } from '../../api/GameType';
+import { MissionService } from '../../../service/mission.service';
+import { GameType } from '../../../api/GameType';
 
 @Component({
     templateUrl: './game-type.component.html',

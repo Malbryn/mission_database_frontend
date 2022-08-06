@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { Map } from '../../api/Map';
+import { MissionService } from '../../../service/mission.service';
+import { MissionFile } from '../../../api/MissionFile';
 
 @Component({
-    templateUrl: './map.component.html',
+    templateUrl: './mission-file.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class MapComponent implements OnInit {
-    maps: Map[] = [];
+export class MissionFileComponent implements OnInit {
+    missionFiles: MissionFile[] = [];
     loading: boolean = true;
 
     @ViewChild('filter') filter!: ElementRef;
@@ -24,8 +24,8 @@ export class MapComponent implements OnInit {
     constructor(private missionService: MissionService) {}
 
     ngOnInit() {
-        this.missionService.getMaps().then((maps) => {
-            this.maps = maps;
+        this.missionService.getMissionFiles().then((missionFiles) => {
+            this.missionFiles = missionFiles;
             this.loading = false;
         });
     }

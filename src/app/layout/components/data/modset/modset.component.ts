@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { Modset } from '../../api/Modset';
+import { MissionService } from '../../../service/mission.service';
+import { Modset } from '../../../api/Modset';
 
 @Component({
     templateUrl: './modset.component.html',

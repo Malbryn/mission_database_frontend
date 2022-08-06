@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { DLC } from '../../api/DLC';
+import { MissionService } from '../../../service/mission.service';
+import { DLC } from '../../../api/DLC';
 
 @Component({
     templateUrl: './dlc.component.html',

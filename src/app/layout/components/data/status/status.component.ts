@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../service/mission.service';
-import { MissionFile } from '../../api/MissionFile';
+import { MissionService } from '../../../service/mission.service';
+import { Status } from '../../../api/Status';
 
 @Component({
-    templateUrl: './mission-file.component.html',
+    templateUrl: './status.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class MissionFileComponent implements OnInit {
-    missionFiles: MissionFile[] = [];
+export class StatusComponent implements OnInit {
+    statuses: Status[] = [];
     loading: boolean = true;
 
     @ViewChild('filter') filter!: ElementRef;
@@ -24,8 +24,8 @@ export class MissionFileComponent implements OnInit {
     constructor(private missionService: MissionService) {}
 
     ngOnInit() {
-        this.missionService.getMissionFiles().then((missionFiles) => {
-            this.missionFiles = missionFiles;
+        this.missionService.getStatuses().then((statuses) => {
+            this.statuses = statuses;
             this.loading = false;
         });
     }

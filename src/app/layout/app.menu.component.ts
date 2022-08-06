@@ -49,7 +49,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Mission Files',
                         icon: 'pi pi-fw pi-angle-right',
-                        routerLink: ['mission-files'],
+                        routerLink: ['data-files'],
                     },
                     {
                         label: 'Modsets',
