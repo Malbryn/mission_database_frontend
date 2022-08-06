@@ -1,0 +1,51 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Filter Menu</h5>
+            <p-table #dt1 [value]="statuses" dataKey="id" [rows]="20" [loading]="loading" [rowHover]="true"
+                     [paginator]="true" [globalFilterFields]="['name']" responsiveLayout="scroll"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button>
+                        <span class="p-input-icon-left mb-2">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                   placeholder="Search Keyword" class="w-full"/>
+						</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                ID
+                                <p-columnFilter type="text" field="id" display="menu"
+                                                placeholder="Search by ID"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Name
+                                <p-columnFilter type="text" field="name" display="menu"
+                                                placeholder="Search by name"></p-columnFilter>
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-status>
+                    <tr>
+                        <td style="min-width: 12rem;">
+                            {{status.id}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            {{status.name}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

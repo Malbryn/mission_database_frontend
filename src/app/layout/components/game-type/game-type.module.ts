@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DatatableComponent } from './datatable.component';
-import { DatatableRoutingModule } from './datatable-routing.module';
+import { GameTypeComponent } from './game-type.component';
+import { GameTypeRoutingModule } from './game-type-routing.module';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,7 +19,7 @@ import { ChipModule } from 'primeng/chip';
 @NgModule({
     imports: [
         CommonModule,
-        DatatableRoutingModule,
+        GameTypeRoutingModule,
         FormsModule,
         TableModule,
         RatingModule,
@@ -34,6 +34,6 @@ import { ChipModule } from 'primeng/chip';
         ToastModule,
         ChipModule,
     ],
-    declarations: [DatatableComponent],
+    declarations: [GameTypeComponent],
 })
-export class DatatableModule {}
+export class GameTypeModule {}

@@ -27,6 +27,16 @@ export class AppMenuComponent implements OnInit {
                 label: 'Components',
                 items: [
                     {
+                        label: "DLC's",
+                        icon: 'pi pi-fw pi-angle-right',
+                        routerLink: ['dlcs'],
+                    },
+                    {
+                        label: 'Game types',
+                        icon: 'pi pi-fw pi-angle-right',
+                        routerLink: ['game-types'],
+                    },
+                    {
                         label: 'Maps',
                         icon: 'pi pi-fw pi-angle-right',
                         routerLink: ['maps'],
@@ -35,6 +45,21 @@ export class AppMenuComponent implements OnInit {
                         label: 'Missions',
                         icon: 'pi pi-fw pi-angle-right',
                         routerLink: ['missions'],
+                    },
+                    {
+                        label: 'Mission Files',
+                        icon: 'pi pi-fw pi-angle-right',
+                        routerLink: ['mission-files'],
+                    },
+                    {
+                        label: 'Modsets',
+                        icon: 'pi pi-fw pi-angle-right',
+                        routerLink: ['modsets'],
+                    },
+                    {
+                        label: 'Statuses',
+                        icon: 'pi pi-fw pi-angle-right',
+                        routerLink: ['statuses'],
                     },
                 ],
             },

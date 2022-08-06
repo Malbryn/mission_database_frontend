@@ -19,11 +19,53 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                                 ).then((m) => m.DashboardModule),
                         },
                         {
+                            path: 'dlcs',
+                            loadChildren: () =>
+                                import(
+                                    './layout/components/dlc/dlc.module'
+                                ).then((m) => m.DLCModule),
+                        },
+                        {
+                            path: 'game-types',
+                            loadChildren: () =>
+                                import(
+                                    './layout/components/game-type/game-type.module'
+                                ).then((m) => m.GameTypeModule),
+                        },
+                        {
+                            path: 'maps',
+                            loadChildren: () =>
+                                import(
+                                    './layout/components/map/map.module'
+                                ).then((m) => m.MapModule),
+                        },
+                        {
                             path: 'missions',
                             loadChildren: () =>
                                 import(
-                                    './layout/components/datatable/datatable.module'
-                                ).then((m) => m.DatatableModule),
+                                    './layout/components/mission/mission.module'
+                                ).then((m) => m.MissionModule),
+                        },
+                        {
+                            path: 'mission-files',
+                            loadChildren: () =>
+                                import(
+                                    './layout/components/mission-file/mission-file.module'
+                                ).then((m) => m.MissionFileModule),
+                        },
+                        {
+                            path: 'modsets',
+                            loadChildren: () =>
+                                import(
+                                    './layout/components/modset/modset.module'
+                                ).then((m) => m.ModsetModule),
+                        },
+                        {
+                            path: 'statuses',
+                            loadChildren: () =>
+                                import(
+                                    './layout/components/status/status.module'
+                                ).then((m) => m.StatusModule),
                         },
                     ],
                 },

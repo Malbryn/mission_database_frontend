@@ -8,21 +8,15 @@ import {
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MissionService } from '../../service/mission.service';
-import { Mission } from '../../api/Mission';
-
-interface ExpandedRows {
-    [key: string]: boolean;
-}
+import { Map } from '../../api/Map';
 
 @Component({
-    templateUrl: './datatable.component.html',
-    styleUrls: ['./datatable-component.css'],
+    templateUrl: './map.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class DatatableComponent implements OnInit {
-    missions: Mission[] = [];
-    expandedRows: ExpandedRows = {};
+export class MapComponent implements OnInit {
+    maps: Map[] = [];
     loading: boolean = true;
 
     @ViewChild('filter') filter!: ElementRef;
@@ -30,8 +24,8 @@ export class DatatableComponent implements OnInit {
     constructor(private missionService: MissionService) {}
 
     ngOnInit() {
-        this.missionService.getMissions().then((missions) => {
-            this.missions = missions;
+        this.missionService.getMaps().then((maps) => {
+            this.maps = maps;
             this.loading = false;
         });
     }
