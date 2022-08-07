@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { NotFoundComponent } from './layout/components/notfound/notfound.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { IsAuthenticatedGuard } from './layout/service/is-authenticated.guard';
+import { HasRoleGuard } from './layout/service/has-role.guard';
+import { AccessComponent } from './layout/components/auth/access/access.component';
 
 @NgModule({
     imports: [
@@ -34,6 +36,7 @@ import { IsAuthenticatedGuard } from './layout/service/is-authenticated.guard';
                         ),
                 },
                 { path: 'notfound', component: NotFoundComponent },
+                { path: 'notallowed', component: AccessComponent },
                 { path: '**', redirectTo: 'notfound' },
             ],
             { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }

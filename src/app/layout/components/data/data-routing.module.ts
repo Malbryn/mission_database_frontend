@@ -49,6 +49,7 @@ import { RouterModule } from '@angular/router';
                         (m) => m.StatusModule
                     ),
             },
+            { path: '**', redirectTo: '/' },
         ]),
     ],
     exports: [RouterModule],
