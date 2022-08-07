@@ -11,10 +11,7 @@ import { Status } from '../api/Status';
 @Injectable()
 export class MissionService {
     httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: 'Basic ' + btoa('malbryn:admin'), // TODO: env this
-        }),
+        headers: {},
     };
 
     constructor(private http: HttpClient) {}

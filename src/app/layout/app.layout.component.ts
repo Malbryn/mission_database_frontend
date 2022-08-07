@@ -4,6 +4,7 @@ import { filter, Subscription } from 'rxjs';
 import { MenuService } from './app.menu.service';
 import { LayoutService } from './service/app.layout.service';
 import { AppSidebarComponent } from './app.sidebar.component';
+import { AuthService } from './service/auth.service';
 
 @Component({
     selector: 'app-layout',
@@ -20,7 +21,8 @@ export class AppLayoutComponent implements OnDestroy {
         private menuService: MenuService,
         public layoutService: LayoutService,
         public renderer: Renderer2,
-        public router: Router
+        public router: Router,
+        public authService: AuthService
     ) {
         this.overlayMenuOpenSubscription =
             this.layoutService.overlayOpen$.subscribe(() => {

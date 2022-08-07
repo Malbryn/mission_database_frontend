@@ -2,6 +2,7 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { NotFoundComponent } from './layout/components/notfound/notfound.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
+import { IsAuthenticatedGuard } from './layout/service/is-authenticated.guard';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                         import(
                             './layout/components/dashboard/dashboard.module'
                         ).then((m) => m.DashboardModule),
+                    canActivate: [IsAuthenticatedGuard],
                 },
                 {
                     path: 'data',
@@ -22,6 +24,7 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                         import('./layout/components/data/data.module').then(
                             (m) => m.DataModule
                         ),
+                    canActivate: [IsAuthenticatedGuard],
                 },
                 {
                     path: 'auth',
