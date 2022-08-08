@@ -1,0 +1,17 @@
+<div class="layout-topbar">
+    <button class="p-link layout-menu-button layout-topbar-button p-trigger ml-2" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <a class="layout-topbar-logo ml-5" routerLink="">
+        <span>MISSION DATABASE</span>
+    </a>
+
+    <div class="layout-topbar-menu flex align-items-center">
+        <p class="m-0">Logged in as <strong>{{ authService.user?.username }}</strong></p>
+
+        <button pButton pRipple type="button" label="Log Out"
+                class="p-button-outlined p-button-danger p-2 ml-3 mr-2">
+        </button>
+    </div>
+</div>
