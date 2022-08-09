@@ -7,7 +7,6 @@ import { first } from 'rxjs';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    providers: [AuthService],
     styles: [
         `
             :host ::ng-deep .p-password input {
