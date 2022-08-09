@@ -1,4 +1,4 @@
-<div *ngIf="authService.isLoggedIn$ | async; else loggedOut" class="layout-wrapper" [ngClass]="containerClass">
+<div class="layout-wrapper" [ngClass]="containerClass">
     <app-topbar></app-topbar>
     <div class="layout-sidebar">
         <app-sidebar></app-sidebar>
@@ -11,4 +11,3 @@
     </div>
     <div class="layout-mask"></div>
 </div>
-<ng-template #loggedOut>NOT LOGGED IN</ng-template>

@@ -12,7 +12,6 @@ import { AuthService } from '../../services/auth.service';
 })
 export class AppLayoutComponent implements OnDestroy {
     overlayMenuOpenSubscription: Subscription;
-
     menuOutsideClickListener: any;
 
     @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;

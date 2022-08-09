@@ -1,48 +1,57 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { ApiService } from './api.service';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { User } from '../models/User';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
-    private readonly TOKEN_NAME = 'auth_token';
-    private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
-    isLoggedIn$ = this._isLoggedIn$.asObservable();
-    user!: User;
+    public user: Observable<User>;
+    private userSubject: BehaviorSubject<User>;
 
-    constructor(private apiService: ApiService, public router: Router) {
-        this._isLoggedIn$.next(!!this.token);
-        this.apiService.getUser(this.getUserID(this.token)).then((user) => {
-            // this.user = { username: 'test', is_staff: true };
-            this.user = user;
-        });
-    }
+    constructor(private router: Router, private http: HttpClient) {
+        const userString = this.getUserFromLocalStorage();
 
-    get token(): string {
-        const token = localStorage.getItem(this.TOKEN_NAME);
-        return token !== null ? token : '';
-    }
-
-    logIn(username: string, password: string): Observable<any> {
-        return this.apiService.logIn(username, password).pipe(
-            tap((response: any) => {
-                localStorage.setItem(this.TOKEN_NAME, response.access);
-
-                this.apiService
-                    .getUser(this.getUserID(response.access))
-                    .then((user) => {
-                        this.user = user;
-                        console.log('USER:', this.user);
-                        this._isLoggedIn$.next(true);
-                    });
-            })
+        this.userSubject = new BehaviorSubject<User>(
+            userString !== '' ? JSON.parse(userString) : null
         );
+
+        this.user = this.userSubject.asObservable();
     }
 
-    private getUserID(token: string): number {
-        return JSON.parse(atob(token.split('.')[1])).user_id;
+    get userValue(): User {
+        return this.userSubject.value;
+    }
+
+    logIn(username: string, password: string) {
+        return this.http
+            .post<any>(`${environment.apiUrl}/auth/authenticate/`, {
+                username,
+                password,
+            })
+            .pipe(
+                map((user) => {
+                    localStorage.setItem('user', JSON.stringify(user));
+                    this.userSubject.next(user);
+
+                    return user;
+                })
+            );
+    }
+
+    logOut(): void {
+        localStorage.removeItem('user');
+        this.userSubject.next(null as any);
+        this.router.navigate(['/auth/login']);
+    }
+
+    private getUserFromLocalStorage(): string {
+        const user = localStorage.getItem('user');
+
+        return user ?? '';
     }
 }

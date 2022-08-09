@@ -1,4 +1,9 @@
+import { Role } from './Role';
+
 export interface User {
-    username?: string;
-    is_staff: boolean;
+    id: number;
+    username: string;
+    roles: Role[];
+    access?: string;
+    refresh?: string;
 }

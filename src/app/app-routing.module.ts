@@ -2,9 +2,9 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { NotFoundComponent } from './components/notfound/notfound.component';
 import { AppLayoutComponent } from './components/layout/app.layout.component';
-import { IsAuthenticatedGuard } from './services/is-authenticated.guard';
-import { HasRoleGuard } from './services/has-role.guard';
 import { AccessComponent } from './components/auth/access/access.component';
+import { Role } from './models/Role';
+import { AuthGuard } from './helpers/auth.guard';
 
 @NgModule({
     imports: [
@@ -17,7 +17,8 @@ import { AccessComponent } from './components/auth/access/access.component';
                         import('./components/dashboard/dashboard.module').then(
                             (m) => m.DashboardModule
                         ),
-                    canActivate: [IsAuthenticatedGuard],
+                    canActivate: [AuthGuard],
+                    data: { roles: [Role.MEMBER] },
                 },
                 {
                     path: 'data',
@@ -26,7 +27,8 @@ import { AccessComponent } from './components/auth/access/access.component';
                         import('./components/data/data.module').then(
                             (m) => m.DataModule
                         ),
-                    canActivate: [IsAuthenticatedGuard],
+                    canActivate: [AuthGuard],
+                    data: { roles: [Role.ADMIN] },
                 },
                 {
                     path: 'auth',

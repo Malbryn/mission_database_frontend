@@ -1,5 +1,5 @@
 export interface Modset {
-    id?: number;
-    name?: string;
-    link?: string;
+    id: number;
+    name: string;
+    link: string;
 }

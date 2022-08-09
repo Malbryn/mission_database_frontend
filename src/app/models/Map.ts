@@ -1,5 +1,5 @@
 export interface Map {
-    id?: number;
-    name?: string;
-    worldName?: string;
+    id: number;
+    name: string;
+    worldName: string;
 }
