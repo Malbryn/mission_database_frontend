@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { RippleModule } from 'primeng/ripple';
         PasswordModule,
         ReactiveFormsModule,
         RippleModule,
+        ToastModule,
     ],
     declarations: [LoginComponent],
 })

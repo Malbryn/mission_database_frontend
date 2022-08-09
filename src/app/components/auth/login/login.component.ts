@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-login',
@@ -27,6 +28,7 @@ import { first } from 'rxjs';
             }
         `,
     ],
+    providers: [MessageService],
 })
 export class LoginComponent implements OnInit {
     loginForm!: FormGroup;
@@ -38,7 +40,8 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authService: AuthService
+        private authService: AuthService,
+        private messageService: MessageService
     ) {
         if (this.authService.userValue) {
             this.router.navigate(['/']);
@@ -76,7 +79,17 @@ export class LoginComponent implements OnInit {
                 error: (error) => {
                     this.error = error;
                     this.loading = false;
+                    this.showErrorViaToast();
                 },
             });
+    }
+
+    showErrorViaToast() {
+        this.messageService.add({
+            key: 'tst',
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Invalid credentials',
+        });
     }
 }
