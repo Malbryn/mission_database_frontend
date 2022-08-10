@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { DLC } from '../../../models/DLC';
+import { Router } from '@angular/router';
+import { DLCService } from '../../../services/dlc.service';
 
 @Component({
     templateUrl: './dlc.component.html',
@@ -21,11 +22,11 @@ export class DLCComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: DLCService, private router: Router) {}
 
     ngOnInit() {
-        this.missionService.getDLCs().then((DLCs) => {
-            this.DLCs = DLCs;
+        this.service.getAll().subscribe((data: DLC[]) => {
+            this.DLCs = data;
             this.loading = false;
         });
     }

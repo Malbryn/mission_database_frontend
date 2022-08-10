@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { MissionFile } from '../../../models/MissionFile';
+import { MissionFileService } from '../../../services/mission-file.service';
 
 @Component({
     templateUrl: './mission-file.component.html',
@@ -21,11 +21,11 @@ export class MissionFileComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: MissionFileService) {}
 
     ngOnInit() {
-        this.missionService.getMissionFiles().then((missionFiles) => {
-            this.missionFiles = missionFiles;
+        this.service.getAll().subscribe((data: MissionFile[]) => {
+            this.missionFiles = data;
             this.loading = false;
         });
     }

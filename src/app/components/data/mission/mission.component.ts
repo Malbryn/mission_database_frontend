@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { Mission } from '../../../models/Mission';
+import { MissionService } from '../../../services/mission.service';
 
 interface ExpandedRows {
     [key: string]: boolean;
@@ -27,11 +27,11 @@ export class MissionComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: MissionService) {}
 
     ngOnInit() {
-        this.missionService.getMissions().then((missions) => {
-            this.missions = missions;
+        this.service.getAll().subscribe((data: Mission[]) => {
+            this.missions = data;
             this.loading = false;
         });
     }

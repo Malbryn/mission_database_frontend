@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { Map } from '../../../models/Map';
+import { MapService } from '../../../services/map.service';
 
 @Component({
     templateUrl: './map.component.html',
@@ -21,11 +21,11 @@ export class MapComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: MapService) {}
 
     ngOnInit() {
-        this.missionService.getMaps().then((maps) => {
-            this.maps = maps;
+        this.service.getAll().subscribe((data: Map[]) => {
+            this.maps = data;
             this.loading = false;
         });
     }

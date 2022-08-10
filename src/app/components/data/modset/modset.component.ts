@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { Modset } from '../../../models/Modset';
+import { ModsetService } from '../../../services/modset.service';
 
 @Component({
     templateUrl: './modset.component.html',
@@ -21,11 +21,11 @@ export class ModsetComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: ModsetService) {}
 
     ngOnInit() {
-        this.missionService.getModsets().then((modsets) => {
-            this.modsets = modsets;
+        this.service.getAll().subscribe((data: Modset[]) => {
+            this.modsets = data;
             this.loading = false;
         });
     }

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CRUDService } from './crud.service';
 import { HttpClient } from '@angular/common/http';
-import { Mission } from '../models/Mission';
+import { Status } from '../models/Status';
 
 @Injectable()
-export class MissionService extends CRUDService<Mission> {
+export class StatusService extends CRUDService<Status> {
     constructor(private httpClient: HttpClient) {
-        super(httpClient, '/missions/');
+        super(httpClient, '/statuses/');
     }
 }

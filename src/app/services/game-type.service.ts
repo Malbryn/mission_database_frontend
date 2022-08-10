@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CRUDService } from './crud.service';
 import { HttpClient } from '@angular/common/http';
-import { Mission } from '../models/Mission';
+import { GameType } from '../models/GameType';
 
 @Injectable()
-export class MissionService extends CRUDService<Mission> {
+export class GameTypeService extends CRUDService<GameType> {
     constructor(private httpClient: HttpClient) {
-        super(httpClient, '/missions/');
+        super(httpClient, '/game_types/');
     }
 }

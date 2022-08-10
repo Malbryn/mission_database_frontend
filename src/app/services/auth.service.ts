@@ -29,7 +29,7 @@ export class AuthService {
 
     logIn(username: string, password: string) {
         return this.http
-            .post<any>(`${environment.apiUrl}/auth/authenticate/`, {
+            .post<any>(`${environment.API_URL}/auth/authenticate/`, {
                 username,
                 password,
             })

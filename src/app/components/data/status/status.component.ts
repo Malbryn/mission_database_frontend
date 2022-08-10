@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { Status } from '../../../models/Status';
+import { StatusService } from '../../../services/status.service';
 
 @Component({
     templateUrl: './status.component.html',
@@ -21,11 +21,11 @@ export class StatusComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: StatusService) {}
 
     ngOnInit() {
-        this.missionService.getStatuses().then((statuses) => {
-            this.statuses = statuses;
+        this.service.getAll().subscribe((data: Status[]) => {
+            this.statuses = data;
             this.loading = false;
         });
     }

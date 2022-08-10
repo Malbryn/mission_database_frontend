@@ -19,7 +19,7 @@ export class JwtInterceptor implements HttpInterceptor {
     ): Observable<HttpEvent<any>> {
         const user = this.authService.userValue;
         const isLoggedIn = user && user.access;
-        const isApiUrl = request.url.startsWith(environment.apiUrl);
+        const isApiUrl = request.url.startsWith(environment.API_URL);
 
         if (isLoggedIn && isApiUrl) {
             request = request.clone({

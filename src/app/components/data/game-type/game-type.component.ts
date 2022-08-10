@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionService } from '../../../services/mission.service';
 import { GameType } from '../../../models/GameType';
+import { GameTypeService } from '../../../services/game-type.service';
 
 @Component({
     templateUrl: './game-type.component.html',
@@ -21,11 +21,11 @@ export class GameTypeComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private missionService: MissionService) {}
+    constructor(private service: GameTypeService) {}
 
     ngOnInit() {
-        this.missionService.getGameTypes().then((gameTypes) => {
-            this.gameTypes = gameTypes;
+        this.service.getAll().subscribe((data: GameType[]) => {
+            this.gameTypes = data;
             this.loading = false;
         });
     }

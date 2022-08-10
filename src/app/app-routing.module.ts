@@ -28,7 +28,7 @@ import { AuthGuard } from './helpers/auth.guard';
                             (m) => m.DataModule
                         ),
                     canActivate: [AuthGuard],
-                    data: { roles: [Role.ADMIN] },
+                    data: { roles: [Role.MEMBER] },
                 },
                 {
                     path: 'auth',

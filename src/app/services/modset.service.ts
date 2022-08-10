@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CRUDService } from './crud.service';
 import { HttpClient } from '@angular/common/http';
-import { Mission } from '../models/Mission';
+import { Modset } from '../models/Modset';
 
 @Injectable()
-export class MissionService extends CRUDService<Mission> {
+export class ModsetService extends CRUDService<Modset> {
     constructor(private httpClient: HttpClient) {
-        super(httpClient, '/missions/');
+        super(httpClient, '/modsets/');
     }
 }
