@@ -19,7 +19,6 @@ import { DLCService } from '../../../services/dlc.service';
 export class DLCComponent implements OnInit {
     DLCs: DLC[] = [];
     loading: boolean = true;
-
     @ViewChild('filter') filter!: ElementRef;
 
     constructor(private service: DLCService, private router: Router) {}
@@ -41,5 +40,9 @@ export class DLCComponent implements OnInit {
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
+    }
+
+    manage() {
+        this.router.navigate(['data/dlcs/manage']);
     }
 }

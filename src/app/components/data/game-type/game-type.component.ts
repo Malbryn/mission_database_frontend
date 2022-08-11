@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { GameType } from '../../../models/GameType';
 import { GameTypeService } from '../../../services/game-type.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './game-type.component.html',
@@ -18,10 +19,9 @@ import { GameTypeService } from '../../../services/game-type.service';
 export class GameTypeComponent implements OnInit {
     gameTypes: GameType[] = [];
     loading: boolean = true;
-
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private service: GameTypeService) {}
+    constructor(private service: GameTypeService, private router: Router) {}
 
     ngOnInit() {
         this.service.getAll().subscribe((data: GameType[]) => {
@@ -40,5 +40,9 @@ export class GameTypeComponent implements OnInit {
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
+    }
+
+    manage() {
+        this.router.navigate(['data/game-types/manage']);
     }
 }

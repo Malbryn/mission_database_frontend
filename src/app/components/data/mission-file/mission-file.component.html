@@ -1,9 +1,20 @@
 <div class="grid">
     <div class="col-12">
         <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Manage" icon="pi pi-pencil"
+                                class="p-button-info mr-2" (click)="manage()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
             <h5>Filter Menu</h5>
             <p-table #dt1 [value]="missionFiles" dataKey="id" [rows]="20" [loading]="loading" [rowHover]="true"
-                     [paginator]="true" [globalFilterFields]="['name']" responsiveLayout="scroll"
+                     [paginator]="true" [showCurrentPageReport]="true" [globalFilterFields]="['name']"
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                     responsiveLayout="scroll"
             >
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -71,25 +82,25 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-missionFile>
                     <tr>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 2.5%; min-width: 6rem;">
                             {{missionFile.id}}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 20%; min-width: 12rem;">
                             {{missionFile.name}}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 2.5%; min-width: 6rem;">
                             {{missionFile.version}}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 20%; min-width: 12rem;">
                             {{missionFile.path}}
                         </td>
-                        <td style="min-width: 12rem;">
-                            {{missionFile.download_url}}
+                        <td style="width: 5%; min-width: 12rem;">
+                            <a href="{{missionFile.download_url}}" target="_blank">Link</a>
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 40%; min-width: 12rem;">
                             {{missionFile.notes}}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 10%; min-width: 12rem;">
                             {{missionFile.created_at | date: 'yyyy-MM-dd, hh:mm a'}}
                         </td>
                     </tr>

@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MissionFile } from '../../../models/MissionFile';
 import { MissionFileService } from '../../../services/mission-file.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './mission-file.component.html',
@@ -18,10 +19,9 @@ import { MissionFileService } from '../../../services/mission-file.service';
 export class MissionFileComponent implements OnInit {
     missionFiles: MissionFile[] = [];
     loading: boolean = true;
-
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private service: MissionFileService) {}
+    constructor(private service: MissionFileService, private router: Router) {}
 
     ngOnInit() {
         this.service.getAll().subscribe((data: MissionFile[]) => {
@@ -40,5 +40,9 @@ export class MissionFileComponent implements OnInit {
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
+    }
+
+    manage() {
+        this.router.navigate(['data/mission-files/manage']);
     }
 }

@@ -1,9 +1,20 @@
 <div class="grid">
     <div class="col-12">
         <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Manage" icon="pi pi-pencil"
+                                class="p-button-info mr-2" (click)="manage()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
             <h5>Filter Menu</h5>
             <p-table #dt1 [value]="maps" dataKey="id" [rows]="20" [loading]="loading" [rowHover]="true"
-                     [paginator]="true" [globalFilterFields]="['name']" responsiveLayout="scroll"
+                     [paginator]="true" [showCurrentPageReport]="true" [globalFilterFields]="['name']"
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                     responsiveLayout="scroll"
             >
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -43,13 +54,13 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-map>
                     <tr>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 2.5%; min-width: 6rem;">
                             {{map.id}}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 50%; min-width: 12rem;">
                             {{map.name}}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="width: 47.5%; min-width: 12rem;">
                             {{map.world_name}}
                         </td>
                     </tr>

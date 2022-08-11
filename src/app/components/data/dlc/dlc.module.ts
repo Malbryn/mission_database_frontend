@@ -15,6 +15,9 @@ import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
+import { DLCManageComponent } from './manage/dlc-manage.component';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
     imports: [
@@ -33,7 +36,9 @@ import { ChipModule } from 'primeng/chip';
         ProgressBarModule,
         ToastModule,
         ChipModule,
+        ToolbarModule,
+        DialogModule,
     ],
-    declarations: [DLCComponent],
+    declarations: [DLCComponent, DLCManageComponent],
 })
 export class DLCModule {}

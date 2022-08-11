@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Status } from '../../../models/Status';
 import { StatusService } from '../../../services/status.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './status.component.html',
@@ -18,10 +19,9 @@ import { StatusService } from '../../../services/status.service';
 export class StatusComponent implements OnInit {
     statuses: Status[] = [];
     loading: boolean = true;
-
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private service: StatusService) {}
+    constructor(private service: StatusService, private router: Router) {}
 
     ngOnInit() {
         this.service.getAll().subscribe((data: Status[]) => {
@@ -40,5 +40,9 @@ export class StatusComponent implements OnInit {
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
+    }
+
+    manage() {
+        this.router.navigate(['data/statuses/manage']);
     }
 }

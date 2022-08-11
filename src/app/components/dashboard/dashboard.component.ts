@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
                         routerLink: ['data/missions'],
                     },
                     {
-                        label: 'Mission Files',
+                        label: 'Mission files',
                         icon: 'pi pi-fw pi-angle-right',
                         routerLink: ['data/mission-files'],
                     },

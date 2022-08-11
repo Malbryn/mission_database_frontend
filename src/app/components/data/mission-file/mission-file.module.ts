@@ -15,6 +15,9 @@ import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
+import { MissionFileManageComponent } from './manage/mission-file-manage.component';
 
 @NgModule({
     imports: [
@@ -33,7 +36,9 @@ import { ChipModule } from 'primeng/chip';
         ProgressBarModule,
         ToastModule,
         ChipModule,
+        ToolbarModule,
+        DialogModule,
     ],
-    declarations: [MissionFileComponent],
+    declarations: [MissionFileComponent, MissionFileManageComponent],
 })
 export class MissionFileModule {}

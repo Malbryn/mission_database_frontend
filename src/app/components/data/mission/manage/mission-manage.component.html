@@ -1,0 +1,170 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-info mr-2"
+                                (click)="goBack()"></button>
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                                (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="missions" [columns]="cols" responsiveLayout="scroll" [loading]="loading"
+                     [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage missions</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                   class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="code">ID
+                            <p-sortIcon field="code"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="name">Name
+                            <p-sortIcon field="name"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="map">Map
+                            <p-sortIcon field="map"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="author">Author
+                            <p-sortIcon field="author"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="gameType">Game type
+                            <p-sortIcon field="gameType"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="slotsMin">Min. slots
+                            <p-sortIcon field="slotsMin"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="slotsMax">Max. slots
+                            <p-sortIcon field="slotsMax"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="createdAt">Created at
+                            <p-sortIcon field="createdAt"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="createdBy">Created by
+                            <p-sortIcon field="createdBy"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="status">Status
+                            <p-sortIcon field="status"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="modset">Modset
+                            <p-sortIcon field="modset"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="dlc">DLC
+                            <p-sortIcon field="dlc"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="description">Description
+                            <p-sortIcon field="description"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-mission>
+                    <tr>
+                        <td style="min-width: 12rem;"><span class="p-column-title">ID</span>
+                            {{mission.id}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Name</span>
+                            {{mission.name}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Map</span>
+                            {{mission.map.name}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Author</span>
+                            {{mission.author}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Game type</span>
+                            {{mission.game_type.name}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Min. slots</span>
+                            {{mission.slots_min}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Max. slots</span>
+                            {{mission.slots_max}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Created at</span>
+                            {{mission.created_at | date: 'yyyy-MM-dd, hh:mm a'}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Created by</span>
+                            {{mission.created_by.name}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Status</span>
+                            {{mission.status.name}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">Modset</span>
+                            {{mission.modset.name}}
+                        </td>
+                        <td style="min-width: 12rem;">
+                            <span class="p-column-title">DLC</span>
+                            {{mission.dlc}}
+                        </td>
+                        <td style="min-width: 24rem;">
+                            <span class="p-column-title">Description</span>
+                            {{mission.description}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-warning mr-2"
+                                        (click)="editMission(mission)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                        (click)="deleteMission(mission)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="newDialog" [style]="{width: '450px'}" header="New mission" [modal]="true"
+                  class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="currentMission!.name" required autofocus
+                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMission.name}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.name">Name is required.</small>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                        (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                        (click)="saveMission()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="currentMission">Are you sure you want to delete <b>{{currentMission.name}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

@@ -33,13 +33,13 @@ export abstract class CRUDService<T> {
         return this.http.get<T[]>(this.URL).pipe(catchError(this.handleError));
     }
 
-    update(value: T): Observable<T> {
+    update(id: number, value: T): Observable<T> {
         return this.http
-            .delete<T>(this.URL, value)
+            .put<T>(this.URL + id + '/', value)
             .pipe(catchError(this.handleError));
     }
 
-    private handleError(error: HttpErrorResponse): Observable<never> {
+    protected handleError(error: HttpErrorResponse): Observable<never> {
         if (error.status === 0) {
             console.error('An error occurred: ', error.error);
         } else {
