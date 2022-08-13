@@ -15,7 +15,8 @@
 
             <p-table #dt [value]="missions" [columns]="cols" responsiveLayout="scroll" [loading]="loading"
                      [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
-                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
+                     dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Manage missions</h5>
@@ -105,11 +106,11 @@
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Created by</span>
-                            {{mission.created_by.name}}
+                            {{mission.created_by.username}}
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Status</span>
-                            {{mission.status.name}}
+                            <span [class]="'status-badge status-' + mission.status.name.toLowerCase()">{{mission.status.name}}</span>
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Modset</span>
@@ -117,7 +118,7 @@
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">DLC</span>
-                            {{mission.dlc}}
+                            <p-chip *ngFor="let dlc of mission.dlc" [label]="dlc.name" class="mr-2"></p-chip>
                         </td>
                         <td style="min-width: 24rem;">
                             <span class="p-column-title">Description</span>
@@ -137,14 +138,88 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="newDialog" [style]="{width: '450px'}" header="Mission" [modal]="true"
-                  class="p-fluid">
+        <p-dialog [(visible)]="newDialog" [style]="{width: '1200px', height: '100%'}" header="Mission" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="currentMission!.name" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMission.name}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.name">Name is required.</small>
+                <div class="col-12">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="col-12 md:col-4">
+                            <label for="name">Name</label>
+                            <input type="text" pInputText id="name" [(ngModel)]="currentMission!.name" required
+                                   autofocus
+                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMission.name}"/>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.name">Name is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Map</label>
+                            <p-autoComplete [(ngModel)]="selectedMap" [suggestions]="filteredMaps"
+                                            (completeMethod)="filterMap($event)" field="name" [dropdown]="true">
+                            </p-autoComplete>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.map.name">Map is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Author</label>
+                            <input type="text" pInputText id="author" [(ngModel)]="currentMission!.author" required autofocus
+                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMission.author}"/>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.author">Author is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Modset</label>
+                            <p-autoComplete [(ngModel)]="selectedModset" [suggestions]="filteredModsets"
+                                            (completeMethod)="filterModset($event)" field="name" [dropdown]="true">
+                            </p-autoComplete>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.status">Modset is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Min. slots</label>
+                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMin" [showButtons]="true" [min]="0" [max]="500">
+                            </p-inputNumber>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.slots_min">Min. slots is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Max. slots</label>
+                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMax" [showButtons]="true" [min]="0" [max]="500">
+                            </p-inputNumber>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.slots_max">Max. slots is required.</small>
+                        </div>
+                        <div class="col-12 md:col-8">
+                            <label for="name">DLC</label>
+                            <div class="col-12 md:col-12 flex align-content-start flex-wrap">
+                                <div *ngFor="let dlc of DLCs" class="field-checkbox pr-4">
+                                    <p-checkbox name="dlcGroup" [value]="dlc.name" [(ngModel)]="selectedDLCs" [id]="dlc.id"></p-checkbox>
+                                    <label [for]="dlc.id">{{dlc.name}}</label>
+                                </div>
+                            </div>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.dlc">DLC is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Game type</label>
+                            <div class="col-12 md:col-12">
+                                <div *ngFor="let gameType of gameTypes" class="field-radiobutton">
+                                    <p-radioButton name="statusGroup" [value]="gameType.name" [(ngModel)]="selectedGameType" [id]="gameType.id"></p-radioButton>
+                                    <label [for]="gameType.id">{{gameType.name}}</label>
+                                </div>
+                            </div>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.status">Game type is required.</small>
+                        </div>
+                        <div class="col-12 md:col-8">
+                            <label for="name">Description</label>
+                            <div class="col-12 md:col-12">
+                                <textarea [rows]="8" pInputTextarea autoResize="autoResize" [(ngModel)]="currentMission!.description"
+                                          style="resize: none; width: inherit" class="p-inputtextarea p-inputtext p-component p-element"></textarea>
+                            </div>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.description">Description is required.</small>
+                        </div>
+                        <div class="col-12 md:col-4">
+                            <label for="name">Status</label>
+                            <div class="col-12 md:col-12">
+                                <div *ngFor="let status of statuses" class="field-radiobutton">
+                                    <p-radioButton name="statusGroup" [value]="status.name" [(ngModel)]="selectedStatus" [id]="status.id"></p-radioButton>
+                                    <label [for]="status.id">{{status.name}}</label>
+                                </div>
+                            </div>
+                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.status">Status is required.</small>
+                        </div>
+                    </div>
                 </div>
             </ng-template>
 
@@ -162,8 +237,10 @@
                 <span *ngIf="currentMission">Are you sure you want to delete <b>{{currentMission.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                        (click)="deleteDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                        (click)="confirmDelete()"></button>
             </ng-template>
         </p-dialog>
     </div>

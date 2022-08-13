@@ -6,10 +6,20 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { Table } from 'primeng/table';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { Mission } from '../../../../models/Mission';
+import { Map } from '../../../../models/Map';
 import { MissionService } from '../../../../services/mission.service';
 import { Router } from '@angular/router';
+import { MapService } from '../../../../services/map.service';
+import { GameType } from '../../../../models/GameType';
+import { GameTypeService } from '../../../../services/game-type.service';
+import { Status } from '../../../../models/Status';
+import { StatusService } from '../../../../services/status.service';
+import { DLC } from '../../../../models/DLC';
+import { DLCService } from '../../../../services/dlc.service';
+import { Modset } from '../../../../models/Modset';
+import { ModsetService } from '../../../../services/modset.service';
 
 @Component({
     templateUrl: './mission-manage.component.html',
@@ -24,10 +34,45 @@ export class MissionManageComponent implements OnInit {
     loading: boolean = true;
     submitted: boolean = false;
     cols: any[] = [];
+
+    // Maps
+    maps: Map[] = [];
+    selectedMap: Map | any;
+    filteredMaps: Map[] = [];
+
+    // Game types
+    gameTypes: GameType[] = [];
+    selectedGameType: GameType | any = {};
+
+    // Slots
+    selectedSlotsMin: number | undefined;
+    selectedSlotsMax: number | undefined;
+
+    // Statuses
+    statuses: Status[] = [];
+    selectedStatus: Status | any = {};
+
+    // Modsets
+    modsets: Modset[] = [];
+    selectedModset: Modset | any;
+    filteredModsets: Modset[] = [];
+
+    // DLC's
+    DLCs: DLC[] = [];
+    selectedDLCs: any[] = [];
+
+    // Description
+    description: string = '';
+
     @ViewChild('filter') filter!: ElementRef;
 
     constructor(
         private service: MissionService,
+        private mapService: MapService,
+        private gameTypeService: GameTypeService,
+        private statusService: StatusService,
+        private modsetService: ModsetService,
+        private dlcService: DLCService,
         private messageService: MessageService,
         private router: Router
     ) {}
@@ -36,6 +81,26 @@ export class MissionManageComponent implements OnInit {
         this.service.getAll().subscribe((data: Mission[]) => {
             this.missions = data;
             this.loading = false;
+        });
+
+        this.mapService.getAll().subscribe((data: Map[]) => {
+            this.maps = data;
+        });
+
+        this.gameTypeService.getAll().subscribe((data: GameType[]) => {
+            this.gameTypes = data;
+        });
+
+        this.statusService.getAll().subscribe((data: Status[]) => {
+            this.statuses = data;
+        });
+
+        this.modsetService.getAll().subscribe((data: Modset[]) => {
+            this.modsets = data;
+        });
+
+        this.dlcService.getAll().subscribe((data: DLC[]) => {
+            this.DLCs = data;
         });
 
         this.cols = [{ field: 'name', header: 'Name' }];
@@ -59,12 +124,28 @@ export class MissionManageComponent implements OnInit {
 
     openNew() {
         this.currentMission = {};
+        this.selectedMap = {};
+        this.selectedGameType = {};
+        this.selectedSlotsMin = undefined;
+        this.selectedSlotsMax = undefined;
+        this.selectedStatus = {};
+        this.selectedModset = {};
+        this.selectedDLCs = [];
+        this.description = '';
         this.submitted = false;
         this.newDialog = true;
     }
 
     editMission(mission: Mission) {
         this.currentMission = { ...mission };
+        this.selectedMap = mission.map;
+        this.selectedGameType = mission.game_type.name;
+        this.selectedSlotsMin = mission.slots_min;
+        this.selectedSlotsMax = mission.slots_max;
+        this.selectedStatus = mission.status.name;
+        this.selectedModset = mission.modset;
+        this.selectedDLCs = mission.dlc.map((dlc) => dlc.name);
+        this.description = mission.description;
         this.newDialog = true;
     }
 
@@ -75,6 +156,7 @@ export class MissionManageComponent implements OnInit {
 
     saveMission() {
         this.submitted = true;
+        console.log(this.currentMission);
 
         if (this.currentMission.name?.trim()) {
             if (this.currentMission.id) {
@@ -155,5 +237,31 @@ export class MissionManageComponent implements OnInit {
 
             this.currentMission = {};
         }
+    }
+
+    filterMap(event: any): void {
+        const filtered: Map[] = [];
+        const query = event.query;
+
+        for (const map of this.maps) {
+            if (map.name.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+                filtered.push(map);
+            }
+        }
+
+        this.filteredMaps = filtered;
+    }
+
+    filterModset(event: any): void {
+        const filtered: Modset[] = [];
+        const query = event.query;
+
+        for (const modset of this.modsets) {
+            if (modset.name.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+                filtered.push(modset);
+            }
+        }
+
+        this.filteredModsets = filtered;
     }
 }

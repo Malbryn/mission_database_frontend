@@ -18,6 +18,10 @@ import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { MissionManageComponent } from './manage/mission-manage.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CheckboxModule } from 'primeng/checkbox';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
     imports: [
@@ -38,6 +42,10 @@ import { MissionManageComponent } from './manage/mission-manage.component';
         ChipModule,
         ToolbarModule,
         DialogModule,
+        AutoCompleteModule,
+        InputNumberModule,
+        CheckboxModule,
+        RadioButtonModule,
     ],
     declarations: [MissionComponent, MissionManageComponent],
 })
