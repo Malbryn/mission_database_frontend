@@ -11,14 +11,14 @@ export interface Mission {
     name: string;
     map: Map;
     author: string;
-    game_type: GameType;
-    slots_min: number;
-    slots_max: number;
+    gameType: GameType;
+    slotsMin: number;
+    slotsMax: number;
     createdAt: string;
     createdBy: User;
     status: Status;
     modset: Modset;
-    dlc: DLC[];
+    dlcs: DLC[];
     description: string;
-    missionFiles: MissionFile;
+    missionFiles: MissionFile[];
 }

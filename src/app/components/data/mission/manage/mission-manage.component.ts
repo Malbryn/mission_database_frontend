@@ -20,6 +20,7 @@ import { DLC } from '../../../../models/DLC';
 import { DLCService } from '../../../../services/dlc.service';
 import { Modset } from '../../../../models/Modset';
 import { ModsetService } from '../../../../services/modset.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
     templateUrl: './mission-manage.component.html',
@@ -27,44 +28,42 @@ import { ModsetService } from '../../../../services/modset.service';
     providers: [MessageService, ConfirmationService],
 })
 export class MissionManageComponent implements OnInit {
-    currentMission!: Mission | any;
+    // Missions
     missions: Mission[] = [];
+    selectedMission!: Mission;
+
+    // Maps
+    maps: Map[] = [];
+    selectedMap!: Map;
+    filteredMaps: Map[] = [];
+
+    // Game types
+    gameTypes: GameType[] = [];
+    selectedGameType!: GameType;
+
+    // Slots
+    selectedSlotsMin!: number;
+    selectedSlotsMax!: number;
+
+    // Statuses
+    statuses: Status[] = [];
+    selectedStatus!: Status;
+
+    // Modsets
+    modsets: Modset[] = [];
+    selectedModset!: Modset;
+    filteredModsets: Modset[] = [];
+
+    // DLC's
+    DLCs: DLC[] = [];
+    selectedDLCs: DLC[] = [];
+
+    @ViewChild('filter') filter!: ElementRef;
     newDialog: boolean = false;
     deleteDialog: boolean = false;
     loading: boolean = true;
     submitted: boolean = false;
     cols: any[] = [];
-
-    // Maps
-    maps: Map[] = [];
-    selectedMap: Map | any;
-    filteredMaps: Map[] = [];
-
-    // Game types
-    gameTypes: GameType[] = [];
-    selectedGameType: GameType | any = {};
-
-    // Slots
-    selectedSlotsMin: number | undefined;
-    selectedSlotsMax: number | undefined;
-
-    // Statuses
-    statuses: Status[] = [];
-    selectedStatus: Status | any = {};
-
-    // Modsets
-    modsets: Modset[] = [];
-    selectedModset: Modset | any;
-    filteredModsets: Modset[] = [];
-
-    // DLC's
-    DLCs: DLC[] = [];
-    selectedDLCs: any[] = [];
-
-    // Description
-    description: string = '';
-
-    @ViewChild('filter') filter!: ElementRef;
 
     constructor(
         private service: MissionService,
@@ -74,7 +73,8 @@ export class MissionManageComponent implements OnInit {
         private modsetService: ModsetService,
         private dlcService: DLCService,
         private messageService: MessageService,
-        private router: Router
+        private router: Router,
+        private authService: AuthService
     ) {}
 
     ngOnInit() {
@@ -123,49 +123,70 @@ export class MissionManageComponent implements OnInit {
     }
 
     openNew() {
-        this.currentMission = {};
-        this.selectedMap = {};
-        this.selectedGameType = {};
-        this.selectedSlotsMin = undefined;
-        this.selectedSlotsMax = undefined;
-        this.selectedStatus = {};
-        this.selectedModset = {};
-        this.selectedDLCs = [];
-        this.description = '';
+        this.selectedMission = {} as Mission;
+        this.selectedMap = {} as Map;
+        this.selectedGameType = {} as GameType;
+        this.selectedSlotsMin = 0;
+        this.selectedSlotsMax = 0;
+        this.selectedStatus = {} as Status;
+        this.selectedModset = {} as Modset;
+        this.selectedDLCs = this.DLCs.filter((value) => value.name === 'None');
+
+        this.selectedMission.missionFiles = [];
+        this.selectedMission.createdBy = this.authService.userValue;
+
         this.submitted = false;
         this.newDialog = true;
     }
 
     editMission(mission: Mission) {
-        this.currentMission = { ...mission };
+        this.selectedMission = { ...mission };
+
+        console.log(this.selectedMission);
+
         this.selectedMap = mission.map;
-        this.selectedGameType = mission.game_type.name;
-        this.selectedSlotsMin = mission.slots_min;
-        this.selectedSlotsMax = mission.slots_max;
-        this.selectedStatus = mission.status.name;
+        this.selectedGameType = mission.gameType;
+        this.selectedSlotsMin = mission.slotsMin;
+        this.selectedSlotsMax = mission.slotsMax;
+        this.selectedStatus = mission.status;
         this.selectedModset = mission.modset;
-        this.selectedDLCs = mission.dlc.map((dlc) => dlc.name);
-        this.description = mission.description;
+        this.selectedDLCs = mission.dlcs;
         this.newDialog = true;
     }
 
     deleteMission(mission: Mission) {
         this.deleteDialog = true;
-        this.currentMission = { ...mission };
+        this.selectedMission = { ...mission };
     }
 
     saveMission() {
         this.submitted = true;
-        console.log(this.currentMission);
+        console.log(this.selectedMission);
 
-        if (this.currentMission.name?.trim()) {
-            if (this.currentMission.id) {
+        this.selectedMission.map = this.selectedMap;
+        this.selectedMission.modset = this.selectedModset;
+        this.selectedMission.slotsMin = this.selectedSlotsMin;
+        this.selectedMission.slotsMax = this.selectedSlotsMax;
+        this.selectedMission.dlcs = this.selectedDLCs;
+        // @ts-ignore
+        this.selectedMission.gameType = this.gameTypes.find(
+            (value) => value.id === this.selectedGameType.id
+        );
+        // @ts-ignore
+        this.selectedMission.status = this.statuses.find(
+            (value) => value.id === this.selectedStatus.id
+        );
+
+        if (this.selectedMission.name?.trim()) {
+            if (this.selectedMission.id) {
+                const requested = this.selectedMission;
+
                 this.service
-                    .update(this.currentMission.id, this.currentMission)
+                    .update(this.selectedMission.id, requested)
                     .subscribe((data) => {
                         this.missions[
-                            this.findIndexById(this.currentMission.id)
-                        ] = this.currentMission;
+                            this.findIndexById(this.selectedMission.id)
+                        ] = this.selectedMission;
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
@@ -175,10 +196,10 @@ export class MissionManageComponent implements OnInit {
 
                         this.missions = [...this.missions];
                         this.newDialog = false;
-                        this.currentMission = {};
+                        this.selectedMission = {} as Mission;
                     });
             } else {
-                this.service.create(this.currentMission).subscribe((data) => {
+                this.service.create(this.selectedMission).subscribe((data) => {
                     this.missions.push(data);
                     this.messageService.add({
                         severity: 'success',
@@ -189,16 +210,16 @@ export class MissionManageComponent implements OnInit {
 
                     this.missions = [...this.missions];
                     this.newDialog = false;
-                    this.currentMission = {};
+                    this.selectedMission = {} as Mission;
                 });
             }
         }
     }
 
-    findIndexById(id: string): number {
+    findIndexById(id: number): number {
         let index = -1;
         for (let i = 0; i < this.missions.length; i++) {
-            if (this.missions[i].id === parseInt(id, 10)) {
+            if (this.missions[i].id === id) {
                 index = i;
                 break;
             }
@@ -215,10 +236,10 @@ export class MissionManageComponent implements OnInit {
     confirmDelete() {
         this.deleteDialog = false;
 
-        if (this.currentMission.id) {
-            this.service.delete(this.currentMission.id).subscribe((data) => {
+        if (this.selectedMission.id) {
+            this.service.delete(this.selectedMission.id).subscribe((data) => {
                 this.missions = this.missions.filter(
-                    (value) => value.id !== this.currentMission.id
+                    (value) => value.id !== this.selectedMission.id
                 );
                 this.messageService.add({
                     severity: 'success',
@@ -235,7 +256,7 @@ export class MissionManageComponent implements OnInit {
                 life: 3000,
             });
 
-            this.currentMission = {};
+            this.selectedMission = {} as Mission;
         }
     }
 

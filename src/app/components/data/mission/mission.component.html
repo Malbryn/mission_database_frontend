@@ -109,10 +109,10 @@
                             {{mission.author}}
                         </td>
                         <td style="width: 15%; min-width: 12rem;">
-                            {{mission.game_type.name}}
+                            {{mission.gameType.name}}
                         </td>
                         <td style="width: 5%; min-width: 6rem;">
-                            {{mission.slots_max}}
+                            {{mission.slotsMax}}
                         </td>
                         <td style="width: 10%; min-width: 12rem;">
                             <span [class]="'status-badge status-' + mission.status.name.toLowerCase()">{{mission.status.name}}</span>
@@ -138,25 +138,25 @@
                                         <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                                             <div class="text-500 w-6 md:w-2 font-medium">Minimum slots</div>
                                             <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                                                {{mission.slots_min}}
+                                                {{mission.slotsMin}}
                                             </div>
                                         </li>
                                         <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                                             <div class="text-500 w-6 md:w-2 font-medium">Maximum slots</div>
                                             <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                                                {{mission.slots_max}}
+                                                {{mission.slotsMax}}
                                             </div>
                                         </li>
                                         <li class="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 surface-border flex-wrap">
                                             <div class="text-500 w-6 md:w-2 font-medium">Required DLC's</div>
                                             <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                                                <p-chip *ngFor="let dlc of mission.dlc" [label]="dlc.name" class="mr-2"></p-chip>
+                                                <p-chip *ngFor="let dlc of mission.dlcs" [label]="dlc.name" class="mr-2"></p-chip>
                                             </div>
                                         </li>
                                         <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                                             <div class="text-500 w-6 md:w-2 font-medium">Created</div>
                                             <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                                                {{mission.created_at | date: 'yyyy-MM-dd, hh:mm a'}}
+                                                {{mission.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
                                             </div>
                                         </li>
                                         <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
@@ -171,13 +171,13 @@
                                 <div class="surface-section">
                                     <ul class="list-none p-0 m-0">
                                         <li class="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 surface-border flex-wrap">
-                                            <p-table class="w-100" [value]="mission.mission_files" dataKey="id" responsiveLayout="scroll">
+                                            <p-table class="w-100" [value]="mission.missionFiles" dataKey="id" responsiveLayout="scroll">
                                                 <ng-template pTemplate="header">
                                                     <tr>
                                                         <th>ID</th>
                                                         <th>Name</th>
                                                         <th>Version</th>
-                                                        <th>Notes</th>
+                                                        <th>Description</th>
                                                         <th>Uploaded</th>
                                                         <th style="width: 4rem"></th>
                                                     </tr>
@@ -187,19 +187,19 @@
                                                         <td style="width: 2.5%; min-width: 6rem;">{{missionFile.id}}</td>
                                                         <td style="width: 35%; min-width: 12rem;">{{missionFile.name}}</td>
                                                         <td style="width: 2.5%; min-width: 6rem;">{{missionFile.version}}</td>
-                                                        <td style="width: 50%; min-width: 12rem;">{{missionFile.notes}}</td>
-                                                        <td style="width: 10%; min-width: 12rem;">{{missionFile.created_at | date: 'yyyy-MM-dd, hh:mm a'}}</td>
-                                                        <td><p-button type="button" icon="pi pi-download" (onClick)="downloadMissionFile(missionFile.download_url)"></p-button></td>
+                                                        <td style="width: 50%; min-width: 12rem;">{{missionFile.description}}</td>
+                                                        <td style="width: 10%; min-width: 12rem;">{{missionFile.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}</td>
+                                                        <td><p-button type="button" icon="pi pi-download" (onClick)="downloadMissionFile(missionFile.downloadUrl)"></p-button></td>
                                                     </tr>
                                                 </ng-template>
                                                 <ng-template pTemplate="emptymessage">
                                                     <tr>
-                                                        <td colspan="7">No maps found.</td>
+                                                        <td colspan="7">No mission files found.</td>
                                                     </tr>
                                                 </ng-template>
                                                 <ng-template pTemplate="loadingbody">
                                                     <tr>
-                                                        <td colspan="7">Loading maps data. Please wait.</td>
+                                                        <td colspan="7">Loading mission file data. Please wait.</td>
                                                     </tr>
                                                 </ng-template>
                                             </p-table>

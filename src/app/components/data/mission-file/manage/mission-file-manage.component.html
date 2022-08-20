@@ -71,7 +71,7 @@
                         </td>
                         <td style="width: 5%; min-width: 12rem;">
                             <span class="p-column-title">Download URL</span>
-                            <a href="{{missionFile.download_url}}" target="_blank">Link</a>
+                            <a href="{{missionFile.downloadUrl}}" target="_blank">Link</a>
                         </td>
                         <td style="width: 40%; min-width: 12rem;">
                             <span class="p-column-title">Notes</span>
@@ -79,7 +79,7 @@
                         </td>
                         <td style="width: 10%; min-width: 12rem;">
                             <span class="p-column-title">Created</span>
-                            {{missionFile.created_at | date: 'yyyy-MM-dd, hh:mm a'}}
+                            {{missionFile.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
                         </td>
                         <td>
                             <div class="flex">
@@ -118,15 +118,15 @@
                 </div>
                 <div class="field">
                     <label for="url">URL</label>
-                    <input type="text" pInputText id="url" [(ngModel)]="currentMissionFile!.download_url" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.download_url}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.download_url">URL is required.</small>
+                    <input type="text" pInputText id="url" [(ngModel)]="currentMissionFile!.downloadUrl" required autofocus
+                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.downloadUrl}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.downloadUrl">URL is required.</small>
                 </div>
                 <div class="field">
-                    <label for="notes">Notes</label>
-                    <input type="text" pInputText id="notes" [(ngModel)]="currentMissionFile!.notes" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.notes}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.notes">Notes is required.</small>
+                    <label for="notes">Description</label>
+                    <input type="text" pInputText id="notes" [(ngModel)]="currentMissionFile!.description" required autofocus
+                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.description}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.description">Description is required.</small>
                 </div>
             </ng-template>
 

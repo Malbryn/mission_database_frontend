@@ -5,9 +5,9 @@ export interface MissionFile {
     mission: Mission;
     name: string;
     path: string;
-    downloadURL: string;
+    downloadUrl: string;
     version: number;
-    notes: string;
+    description: string;
     createdAt: string;
     file: string;
 }

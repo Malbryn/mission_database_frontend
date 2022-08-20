@@ -34,8 +34,10 @@ export abstract class CRUDService<T> {
     }
 
     update(id: number, value: T): Observable<T> {
+        console.log('UPDATE QUERY: ', value);
+
         return this.http
-            .put<T>(this.URL + id + '/', value)
+            .patch<T>(this.URL + id + '/', value)
             .pipe(catchError(this.handleError));
     }
 

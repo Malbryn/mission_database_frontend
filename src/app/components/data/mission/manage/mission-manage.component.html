@@ -90,23 +90,23 @@
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Game type</span>
-                            {{mission.game_type.name}}
+                            {{mission.gameType.name}}
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Min. slots</span>
-                            {{mission.slots_min}}
+                            {{mission.slotsMin}}
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Max. slots</span>
-                            {{mission.slots_max}}
+                            {{mission.slotsMax}}
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Created at</span>
-                            {{mission.created_at | date: 'yyyy-MM-dd, hh:mm a'}}
+                            {{mission.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Created by</span>
-                            {{mission.created_by.username}}
+                            {{mission.createdBy.username}}
                         </td>
                         <td style="min-width: 12rem;">
                             <span class="p-column-title">Status</span>
@@ -144,80 +144,75 @@
                     <div class="p-fluid p-formgrid grid">
                         <div class="col-12 md:col-4">
                             <label for="name">Name</label>
-                            <input type="text" pInputText id="name" [(ngModel)]="currentMission!.name" required
-                                   autofocus
-                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMission.name}"/>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.name">Name is required.</small>
+                            <input type="text" pInputText id="name" [(ngModel)]="selectedMission!.name" autofocus required
+                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMission.name}"/>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.name">Name is required.</small>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Map</label>
                             <p-autoComplete [(ngModel)]="selectedMap" [suggestions]="filteredMaps"
-                                            (completeMethod)="filterMap($event)" field="name" [dropdown]="true">
+                                            (completeMethod)="filterMap($event)" field="name" [dropdown]="true"
+                                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMission.map}">
                             </p-autoComplete>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.map.name">Map is required.</small>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.map.name">Map is required.</small>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Author</label>
-                            <input type="text" pInputText id="author" [(ngModel)]="currentMission!.author" required autofocus
-                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMission.author}"/>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.author">Author is required.</small>
+                            <input type="text" pInputText id="author" [(ngModel)]="selectedMission!.author" required
+                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMission.author}"/>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.author">Author is required.</small>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Modset</label>
                             <p-autoComplete [(ngModel)]="selectedModset" [suggestions]="filteredModsets"
                                             (completeMethod)="filterModset($event)" field="name" [dropdown]="true">
                             </p-autoComplete>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.status">Modset is required.</small>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.modset">Modset is required.</small>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Min. slots</label>
-                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMin" [showButtons]="true" [min]="0" [max]="500">
-                            </p-inputNumber>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.slots_min">Min. slots is required.</small>
+                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMin" [showButtons]="true" [min]="0" [max]="500"></p-inputNumber>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Max. slots</label>
-                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMax" [showButtons]="true" [min]="0" [max]="500">
-                            </p-inputNumber>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.slots_max">Max. slots is required.</small>
+                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMax" [showButtons]="true" [min]="0" [max]="500"></p-inputNumber>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.slotsMax">Max. slots is required.</small>
                         </div>
                         <div class="col-12 md:col-8">
                             <label for="name">DLC</label>
                             <div class="col-12 md:col-12 flex align-content-start flex-wrap">
                                 <div *ngFor="let dlc of DLCs" class="field-checkbox pr-4">
-                                    <p-checkbox name="dlcGroup" [value]="dlc.name" [(ngModel)]="selectedDLCs" [id]="dlc.id"></p-checkbox>
-                                    <label [for]="dlc.id">{{dlc.name}}</label>
+                                    <p-checkbox name="dlcGroup" [value]="dlc" [(ngModel)]="selectedDLCs" [label]="dlc.name"></p-checkbox>
                                 </div>
                             </div>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.dlc">DLC is required.</small>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.dlcs">DLC is required.</small>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Game type</label>
                             <div class="col-12 md:col-12">
                                 <div *ngFor="let gameType of gameTypes" class="field-radiobutton">
-                                    <p-radioButton name="statusGroup" [value]="gameType.name" [(ngModel)]="selectedGameType" [id]="gameType.id"></p-radioButton>
-                                    <label [for]="gameType.id">{{gameType.name}}</label>
+                                    <p-radioButton name="gameTypeGroup" [value]="gameType.id" [(ngModel)]="selectedGameType.id"
+                                                   [label]="gameType.name"></p-radioButton>
                                 </div>
                             </div>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.status">Game type is required.</small>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.gameType">Game type is required.</small>
                         </div>
                         <div class="col-12 md:col-8">
-                            <label for="name">Description</label>
+                            <label for="description">Description</label>
                             <div class="col-12 md:col-12">
-                                <textarea [rows]="8" pInputTextarea autoResize="autoResize" [(ngModel)]="currentMission!.description"
+                                <textarea pInputTextarea  [rows]="8" type="text" id="description" autoResize="autoResize" [(ngModel)]="selectedMission!.description" required
                                           style="resize: none; width: inherit" class="p-inputtextarea p-inputtext p-component p-element"></textarea>
                             </div>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.description">Description is required.</small>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.description">Description is required.</small>
                         </div>
                         <div class="col-12 md:col-4">
                             <label for="name">Status</label>
                             <div class="col-12 md:col-12">
                                 <div *ngFor="let status of statuses" class="field-radiobutton">
-                                    <p-radioButton name="statusGroup" [value]="status.name" [(ngModel)]="selectedStatus" [id]="status.id"></p-radioButton>
-                                    <label [for]="status.id">{{status.name}}</label>
+                                    <p-radioButton name="statusGroup" [value]="status.id" [(ngModel)]="selectedStatus.id" [label]="status.name"></p-radioButton>
                                 </div>
                             </div>
-                            <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMission.status">Status is required.</small>
+                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.status">Status is required.</small>
                         </div>
                     </div>
                 </div>
@@ -234,7 +229,7 @@
         <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="currentMission">Are you sure you want to delete <b>{{currentMission.name}}</b>?</span>
+                <span *ngIf="selectedMission">Are you sure you want to delete <b>{{selectedMission.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
