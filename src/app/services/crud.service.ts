@@ -12,6 +12,8 @@ export abstract class CRUDService<T> {
     }
 
     create(value: T): Observable<T> {
+        console.log('CREATE QUERY: ', value);
+
         return this.http
             .post<T>(this.URL, value)
             .pipe(catchError(this.handleError));

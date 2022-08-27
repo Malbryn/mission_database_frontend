@@ -43,8 +43,8 @@
                         <th pSortableColumn="url">Download URL
                             <p-sortIcon field="url"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="notes">Notes
-                            <p-sortIcon field="notes"></p-sortIcon>
+                        <th pSortableColumn="description">Description
+                            <p-sortIcon field="description"></p-sortIcon>
                         </th>
                         <th pSortableColumn="created">Created
                             <p-sortIcon field="created"></p-sortIcon>
@@ -74,8 +74,8 @@
                             <a href="{{missionFile.downloadUrl}}" target="_blank">Link</a>
                         </td>
                         <td style="width: 40%; min-width: 12rem;">
-                            <span class="p-column-title">Notes</span>
-                            {{missionFile.notes}}
+                            <span class="p-column-title">Description</span>
+                            {{missionFile.description}}
                         </td>
                         <td style="width: 10%; min-width: 12rem;">
                             <span class="p-column-title">Created</span>
@@ -95,38 +95,48 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="newDialog" [style]="{width: '450px'}" header="Mission file" [modal]="true"
-                  class="p-fluid">
+        <p-dialog [(visible)]="newDialog" [style]="{width: '600px'}" header="Mission file" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
                     <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="currentMissionFile!.name" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.name}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.name">Name is required.</small>
+                    <input type="text" pInputText id="name" [(ngModel)]="selectedMissionFile!.name" required autofocus/>
+                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.name">Name is required.</small>
                 </div>
                 <div class="field">
-                    <label for="version">Version</label>
-                    <input type="text" pInputText id="version" [(ngModel)]="currentMissionFile!.version" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.version}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.version">Version is required.</small>
+                    <label for="mission">Mission</label>
+                    <p-autoComplete id="mission" [(ngModel)]="selectedMission" [suggestions]="filteredMissions"
+                                    (completeMethod)="filterMission($event)" field="name" [dropdown]="true"
+                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMissionFile.mission}">
+                    </p-autoComplete>
+                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.mission">Mission is required.</small>
                 </div>
                 <div class="field">
+                    <label for="name">Version</label>
+                    <p-inputNumber mode="decimal" [(ngModel)]="selectedVersion" [showButtons]="true" [min]="0" [max]="500"></p-inputNumber>
+                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.version">Version is required.</small>
+                </div>
+                <div class="field" *ngIf="selectedMissionFile.id">
                     <label for="path">Path</label>
-                    <input type="text" pInputText id="path" [(ngModel)]="currentMissionFile!.path" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.path}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.path">Path is required.</small>
+                    <input type="text" pInputText id="path" [(ngModel)]="selectedMissionFile!.path" required autofocus
+                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMissionFile.path}"/>
+                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.path">Path is required.</small>
                 </div>
-                <div class="field">
+                <div class="field" *ngIf="selectedMissionFile.id">
                     <label for="url">URL</label>
-                    <input type="text" pInputText id="url" [(ngModel)]="currentMissionFile!.downloadUrl" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.downloadUrl}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.downloadUrl">URL is required.</small>
+                    <input type="text" pInputText id="url" [(ngModel)]="selectedMissionFile!.downloadUrl" required autofocus
+                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMissionFile.downloadUrl}"/>
+                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.downloadUrl">Download URL is required.</small>
                 </div>
                 <div class="field">
-                    <label for="notes">Description</label>
-                    <input type="text" pInputText id="notes" [(ngModel)]="currentMissionFile!.description" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMissionFile.description}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMissionFile.description">Description is required.</small>
+                    <label for="description">Description</label>
+                    <textarea pInputTextarea  [rows]="8" type="text" id="description" autoResize="autoResize" [(ngModel)]="selectedMissionFile!.description"
+                              required style="resize: none; width: 100%" class="p-inputtextarea p-inputtext p-component p-element"></textarea>
+                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.description">Description is required.</small>
+                </div>
+                <div class="field" *ngIf="!selectedMissionFile.id">
+                    <label for="fileUpload">Upload mission file</label>
+                    <p-fileUpload id="fileUpload" name="missionFile" accept=".pbo" [maxFileSize]="10000000" [fileLimit]="1" [showUploadButton]="false"
+                                  [showCancelButton]="false" [previewWidth]="0" [customUpload]="true" (onSelect)="onFileUpload($event)"></p-fileUpload>
                 </div>
             </ng-template>
 
@@ -141,7 +151,7 @@
         <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="currentMissionFile">Are you sure you want to delete <b>{{currentMissionFile.name}}</b>?</span>
+                <span *ngIf="selectedMissionFile">Are you sure you want to delete <b>{{selectedMissionFile.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteDialog = false"></button>

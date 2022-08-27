@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
     HttpEvent,
     HttpHandler,
+    HttpHeaders,
     HttpInterceptor,
     HttpRequest,
 } from '@angular/common/http';
@@ -22,11 +23,19 @@ export class JwtInterceptor implements HttpInterceptor {
         const isApiUrl = request.url.startsWith(environment.API_URL);
 
         if (isLoggedIn && isApiUrl) {
-            request = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${user.access}`,
-                },
+            let headers = new HttpHeaders({
+                Authorization: `Bearer ${user.access}`,
+                'Content-Type': 'application/json',
             });
+
+            if (request.url && request.url.indexOf('mission_files') !== -1) {
+                headers = new HttpHeaders({
+                    Authorization: `Bearer ${user.access}`,
+                    'Content-Type': 'multipart/form-data',
+                });
+            }
+
+            request = request.clone({ headers });
         }
 
         return next.handle(request);

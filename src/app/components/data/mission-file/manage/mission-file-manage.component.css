@@ -1,0 +1,4 @@
+/* Remove file upload preview */
+.p-fileupload-row > div:first-of-type {
+    display: none;
+}

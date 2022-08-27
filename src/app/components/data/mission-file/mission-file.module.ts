@@ -18,6 +18,9 @@ import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { MissionFileManageComponent } from './manage/mission-file-manage.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { FileUploadModule } from 'primeng/fileupload';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
     imports: [
@@ -38,6 +41,9 @@ import { MissionFileManageComponent } from './manage/mission-file-manage.compone
         ChipModule,
         ToolbarModule,
         DialogModule,
+        InputNumberModule,
+        FileUploadModule,
+        AutoCompleteModule,
     ],
     declarations: [MissionFileComponent, MissionFileManageComponent],
 })

@@ -10,24 +10,42 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { MissionFile } from '../../../../models/MissionFile';
 import { MissionFileService } from '../../../../services/mission-file.service';
 import { Router } from '@angular/router';
+import { MissionService } from '../../../../services/mission.service';
+import { Mission } from '../../../../models/Mission';
+import { Map } from '../../../../models/Map';
 
 @Component({
     templateUrl: './mission-file-manage.component.html',
+    styleUrls: ['./mission-file-manage.component.css'],
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
 export class MissionFileManageComponent implements OnInit {
-    currentMissionFile!: MissionFile | any;
+    // Mission files
     missionFiles: MissionFile[] = [];
+    selectedMissionFile!: MissionFile;
+
+    // Missions
+    missions: Mission[] = [];
+    selectedMission!: Mission;
+    filteredMissions: Mission[] = [];
+
+    // Version
+    selectedVersion!: number;
+
+    // PBO
+    selectedFile: File = {} as File;
+
+    @ViewChild('filter') filter!: ElementRef;
     newDialog: boolean = false;
     deleteDialog: boolean = false;
     loading: boolean = true;
     submitted: boolean = false;
     cols: any[] = [];
-    @ViewChild('filter') filter!: ElementRef;
 
     constructor(
         private service: MissionFileService,
+        private missionService: MissionService,
         private messageService: MessageService,
         private router: Router
     ) {}
@@ -36,6 +54,10 @@ export class MissionFileManageComponent implements OnInit {
         this.service.getAll().subscribe((data: MissionFile[]) => {
             this.missionFiles = data;
             this.loading = false;
+        });
+
+        this.missionService.getAll().subscribe((data: Mission[]) => {
+            this.missions = data;
         });
 
         this.cols = [{ field: 'name', header: 'Name' }];
@@ -58,32 +80,46 @@ export class MissionFileManageComponent implements OnInit {
     }
 
     openNew() {
-        this.currentMissionFile = {};
+        this.selectedMissionFile = {} as MissionFile;
+        this.selectedMission = {} as Mission;
+        this.selectedVersion = 0;
+
         this.submitted = false;
         this.newDialog = true;
     }
 
     editMissionFile(missionFile: MissionFile) {
-        this.currentMissionFile = { ...missionFile };
+        this.selectedMissionFile = { ...missionFile };
+
+        console.log(this.selectedMissionFile);
+
+        this.selectedMission = this.findMissionByID(missionFile.mission);
+        this.selectedVersion = missionFile.version;
         this.newDialog = true;
     }
 
     deleteMissionFile(missionFile: MissionFile) {
         this.deleteDialog = true;
-        this.currentMissionFile = { ...missionFile };
+        this.selectedMissionFile = { ...missionFile };
     }
 
     saveMissionFile() {
         this.submitted = true;
 
-        if (this.currentMissionFile.name?.trim()) {
-            if (this.currentMissionFile.id) {
+        this.selectedMissionFile.mission = this.selectedMission.id;
+        this.selectedMissionFile.version = this.selectedVersion;
+        this.selectedMissionFile.file = this.selectedFile;
+
+        if (this.selectedMissionFile.name?.trim()) {
+            if (this.selectedMissionFile.id) {
+                const requested = this.selectedMissionFile;
+
                 this.service
-                    .update(this.currentMissionFile.id, this.currentMissionFile)
+                    .update(this.selectedMissionFile.id, requested)
                     .subscribe((data) => {
                         this.missionFiles[
-                            this.findIndexById(this.currentMissionFile.id)
-                        ] = this.currentMissionFile;
+                            this.findIndexById(this.selectedMissionFile.id)
+                        ] = this.selectedMissionFile;
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
@@ -93,11 +129,11 @@ export class MissionFileManageComponent implements OnInit {
 
                         this.missionFiles = [...this.missionFiles];
                         this.newDialog = false;
-                        this.currentMissionFile = {};
+                        this.selectedMissionFile = {} as MissionFile;
                     });
             } else {
                 this.service
-                    .create(this.currentMissionFile)
+                    .create(this.selectedMissionFile)
                     .subscribe((data) => {
                         this.missionFiles.push(data);
                         this.messageService.add({
@@ -109,16 +145,16 @@ export class MissionFileManageComponent implements OnInit {
 
                         this.missionFiles = [...this.missionFiles];
                         this.newDialog = false;
-                        this.currentMissionFile = {};
+                        this.selectedMissionFile = {} as MissionFile;
                     });
             }
         }
     }
 
-    findIndexById(id: string): number {
+    findIndexById(id: number): number {
         let index = -1;
         for (let i = 0; i < this.missionFiles.length; i++) {
-            if (this.missionFiles[i].id === parseInt(id, 10)) {
+            if (this.missionFiles[i].id === id) {
                 index = i;
                 break;
             }
@@ -135,12 +171,12 @@ export class MissionFileManageComponent implements OnInit {
     confirmDelete() {
         this.deleteDialog = false;
 
-        if (this.currentMissionFile.id) {
+        if (this.selectedMissionFile.id) {
             this.service
-                .delete(this.currentMissionFile.id)
+                .delete(this.selectedMissionFile.id)
                 .subscribe((data) => {
                     this.missionFiles = this.missionFiles.filter(
-                        (value) => value.id !== this.currentMissionFile.id
+                        (value) => value.id !== this.selectedMissionFile.id
                     );
                     this.messageService.add({
                         severity: 'success',
@@ -157,7 +193,29 @@ export class MissionFileManageComponent implements OnInit {
                 life: 3000,
             });
 
-            this.currentMissionFile = {};
+            this.selectedMissionFile = {} as MissionFile;
         }
+    }
+
+    filterMission(event: any): void {
+        const filtered: Mission[] = [];
+        const query = event.query;
+
+        for (const mission of this.missions) {
+            if (mission.name.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+                filtered.push(mission);
+            }
+        }
+
+        this.filteredMissions = filtered;
+    }
+
+    findMissionByID(id: number): Mission {
+        const mission = this.missions.find((element) => element.id === id);
+        return mission === undefined ? ({} as Mission) : mission;
+    }
+
+    onFileUpload($event: any): void {
+        this.selectedFile = $event.currentFiles[0];
     }
 }
