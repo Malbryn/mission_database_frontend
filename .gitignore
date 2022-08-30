@@ -41,3 +41,7 @@ Thumbs.db
 # Compiled files
 layout.css
 src/assets/styles/theme/designer
+
+# Environment
+src/environments/environment.ts
+src/environments/environment.prod.ts
