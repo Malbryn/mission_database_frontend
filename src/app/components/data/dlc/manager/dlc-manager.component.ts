@@ -12,11 +12,11 @@ import { DLCService } from '../../../../services/dlc.service';
 import { Router } from '@angular/router';
 
 @Component({
-    templateUrl: './dlc-manage.component.html',
+    templateUrl: './dlc-manager.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class DLCManageComponent implements OnInit {
+export class DlcManagerComponent implements OnInit {
     currentDLC!: DLC | any;
     DLCs: DLC[] = [];
     newDialog: boolean = false;

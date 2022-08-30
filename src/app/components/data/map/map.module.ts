@@ -17,7 +17,7 @@ import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
-import { MapManageComponent } from './manage/map-manage.component';
+import { MapManagerComponent } from './manager/map-manager.component';
 
 @NgModule({
     imports: [
@@ -39,6 +39,6 @@ import { MapManageComponent } from './manage/map-manage.component';
         ToolbarModule,
         DialogModule,
     ],
-    declarations: [MapComponent, MapManageComponent],
+    declarations: [MapComponent, MapManagerComponent],
 })
 export class MapModule {}

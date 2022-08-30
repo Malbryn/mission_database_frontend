@@ -17,7 +17,7 @@ import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
-import { StatusManageComponent } from './manage/status-manage.component';
+import { StatusManagerComponent } from './manager/status-manager.component';
 
 @NgModule({
     imports: [
@@ -39,6 +39,6 @@ import { StatusManageComponent } from './manage/status-manage.component';
         ToolbarModule,
         DialogModule,
     ],
-    declarations: [StatusComponent, StatusManageComponent],
+    declarations: [StatusComponent, StatusManagerComponent],
 })
 export class StatusModule {}

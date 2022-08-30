@@ -17,7 +17,7 @@ import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
-import { GameTypeManageComponent } from './manage/game-type-manage.component';
+import { GameTypeManagerComponent } from './manager/game-type-manager.component';
 
 @NgModule({
     imports: [
@@ -39,6 +39,6 @@ import { GameTypeManageComponent } from './manage/game-type-manage.component';
         ToolbarModule,
         DialogModule,
     ],
-    declarations: [GameTypeComponent, GameTypeManageComponent],
+    declarations: [GameTypeComponent, GameTypeManagerComponent],
 })
 export class GameTypeModule {}

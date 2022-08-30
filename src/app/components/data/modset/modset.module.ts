@@ -17,7 +17,7 @@ import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
-import { ModsetManageComponent } from './manage/modset-manage.component';
+import { ModsetManagerComponent } from './manager/modset-manager.component';
 
 @NgModule({
     imports: [
@@ -39,6 +39,6 @@ import { ModsetManageComponent } from './manage/modset-manage.component';
         ToolbarModule,
         DialogModule,
     ],
-    declarations: [ModsetComponent, ModsetManageComponent],
+    declarations: [ModsetComponent, ModsetManagerComponent],
 })
 export class ModsetModule {}

@@ -23,11 +23,11 @@ import { ModsetService } from '../../../../services/modset.service';
 import { AuthService } from '../../../../services/auth.service';
 
 @Component({
-    templateUrl: './mission-manage.component.html',
+    templateUrl: './mission-manager.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class MissionManageComponent implements OnInit {
+export class MissionManagerComponent implements OnInit {
     // Missions
     missions: Mission[] = [];
     selectedMission!: Mission;
@@ -159,6 +159,7 @@ export class MissionManageComponent implements OnInit {
         this.selectedMission = { ...mission };
     }
 
+    /*
     saveMission() {
         this.submitted = true;
         console.log(this.selectedMission);
@@ -215,6 +216,7 @@ export class MissionManageComponent implements OnInit {
             }
         }
     }
+*/
 
     findIndexById(id: number): number {
         let index = -1;

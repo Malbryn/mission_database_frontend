@@ -15,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
-import { DLCManageComponent } from './manage/dlc-manage.component';
+import { DlcManagerComponent } from './manager/dlc-manager.component';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 
@@ -39,6 +39,6 @@ import { DialogModule } from 'primeng/dialog';
         ToolbarModule,
         DialogModule,
     ],
-    declarations: [DLCComponent, DLCManageComponent],
+    declarations: [DLCComponent, DlcManagerComponent],
 })
 export class DLCModule {}

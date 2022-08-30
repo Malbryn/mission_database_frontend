@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DLCComponent } from './dlc.component';
-import { DLCManageComponent } from './manage/dlc-manage.component';
+import { DlcManagerComponent } from './manager/dlc-manager.component';
 
 @NgModule({
     imports: [
         RouterModule.forChild([
             { path: '', component: DLCComponent },
-            { path: 'manage', component: DLCManageComponent },
+            { path: 'manage', component: DlcManagerComponent },
         ]),
     ],
     exports: [RouterModule],

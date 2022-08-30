@@ -12,11 +12,11 @@ import { ModsetService } from '../../../../services/modset.service';
 import { Router } from '@angular/router';
 
 @Component({
-    templateUrl: './modset-manage.component.html',
+    templateUrl: './modset-manager.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class ModsetManageComponent implements OnInit {
+export class ModsetManagerComponent implements OnInit {
     currentModset!: Modset | any;
     modsets: Modset[] = [];
     newDialog: boolean = false;

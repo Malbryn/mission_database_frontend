@@ -7,18 +7,18 @@ import {
 } from '@angular/core';
 import { Table } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Map } from '../../../../models/Map';
-import { MapService } from '../../../../services/map.service';
+import { Status } from '../../../../models/Status';
+import { StatusService } from '../../../../services/status.service';
 import { Router } from '@angular/router';
 
 @Component({
-    templateUrl: './map-manage.component.html',
+    templateUrl: './status-manager.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class MapManageComponent implements OnInit {
-    currentMap!: Map | any;
-    maps: Map[] = [];
+export class StatusManagerComponent implements OnInit {
+    currentStatus!: Status | any;
+    statuses: Status[] = [];
     newDialog: boolean = false;
     deleteDialog: boolean = false;
     loading: boolean = true;
@@ -27,14 +27,14 @@ export class MapManageComponent implements OnInit {
     @ViewChild('filter') filter!: ElementRef;
 
     constructor(
-        private service: MapService,
+        private service: StatusService,
         private messageService: MessageService,
         private router: Router
     ) {}
 
     ngOnInit() {
-        this.service.getAll().subscribe((data: Map[]) => {
-            this.maps = data;
+        this.service.getAll().subscribe((data: Status[]) => {
+            this.statuses = data;
             this.loading = false;
         });
 
@@ -54,59 +54,60 @@ export class MapManageComponent implements OnInit {
     }
 
     goBack() {
-        this.router.navigateByUrl('/data/maps');
+        this.router.navigateByUrl('/data/statuses');
     }
 
     openNew() {
-        this.currentMap = {};
+        this.currentStatus = {};
         this.submitted = false;
         this.newDialog = true;
     }
 
-    editMap(map: Map) {
-        this.currentMap = { ...map };
+    editStatus(status: Status) {
+        this.currentStatus = { ...status };
         this.newDialog = true;
     }
 
-    deleteMap(map: Map) {
+    deleteStatus(status: Status) {
         this.deleteDialog = true;
-        this.currentMap = { ...map };
+        this.currentStatus = { ...status };
     }
 
-    saveMap() {
+    saveStatus() {
         this.submitted = true;
 
-        if (this.currentMap.name?.trim()) {
-            if (this.currentMap.id) {
+        if (this.currentStatus.name?.trim()) {
+            if (this.currentStatus.id) {
                 this.service
-                    .update(this.currentMap.id, this.currentMap)
+                    .update(this.currentStatus.id, this.currentStatus)
                     .subscribe((data) => {
-                        this.maps[this.findIndexById(this.currentMap.id)] =
-                            this.currentMap;
+                        this.statuses[
+                            this.findIndexById(this.currentStatus.id)
+                        ] = this.currentStatus;
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
-                            detail: 'Map updated',
+                            detail: 'Status updated',
                             life: 3000,
                         });
 
-                        this.maps = [...this.maps];
+                        this.statuses = [...this.statuses];
                         this.newDialog = false;
-                        this.currentMap = {};
+                        this.currentStatus = {};
                     });
             } else {
-                this.service.create(this.currentMap).subscribe((data) => {
-                    this.maps.push(data);
+                this.service.create(this.currentStatus).subscribe((data) => {
+                    this.statuses.push(data);
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Map created',
+                        detail: 'Status created',
                         life: 3000,
                     });
 
-                    this.maps = [...this.maps];
+                    this.statuses = [...this.statuses];
                     this.newDialog = false;
-                    this.currentMap = {};
+                    this.currentStatus = {};
                 });
             }
         }
@@ -114,8 +115,8 @@ export class MapManageComponent implements OnInit {
 
     findIndexById(id: string): number {
         let index = -1;
-        for (let i = 0; i < this.maps.length; i++) {
-            if (this.maps[i].id === parseInt(id, 10)) {
+        for (let i = 0; i < this.statuses.length; i++) {
+            if (this.statuses[i].id === parseInt(id, 10)) {
                 index = i;
                 break;
             }
@@ -132,15 +133,15 @@ export class MapManageComponent implements OnInit {
     confirmDelete() {
         this.deleteDialog = false;
 
-        if (this.currentMap.id) {
-            this.service.delete(this.currentMap.id).subscribe((data) => {
-                this.maps = this.maps.filter(
-                    (value) => value.id !== this.currentMap.id
+        if (this.currentStatus.id) {
+            this.service.delete(this.currentStatus.id).subscribe((data) => {
+                this.statuses = this.statuses.filter(
+                    (value) => value.id !== this.currentStatus.id
                 );
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'Map deleted',
+                    detail: 'Status deleted',
                     life: 3000,
                 });
             });
@@ -148,11 +149,11 @@ export class MapManageComponent implements OnInit {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: "Couldn't remove Map",
+                detail: "Couldn't remove Status",
                 life: 3000,
             });
 
-            this.currentMap = {};
+            this.currentStatus = {};
         }
     }
 }

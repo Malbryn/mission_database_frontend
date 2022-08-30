@@ -17,7 +17,7 @@ import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
-import { MissionManageComponent } from './manage/mission-manage.component';
+import { MissionManagerComponent } from './manager/mission-manager.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -47,6 +47,6 @@ import { RadioButtonModule } from 'primeng/radiobutton';
         CheckboxModule,
         RadioButtonModule,
     ],
-    declarations: [MissionComponent, MissionManageComponent],
+    declarations: [MissionComponent, MissionManagerComponent],
 })
 export class MissionModule {}

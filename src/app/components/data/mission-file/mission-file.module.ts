@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MissionFileComponent } from './mission-file.component';
 import { MissionFileRoutingModule } from './mission-file-routing.module';
 import { TableModule } from 'primeng/table';
@@ -17,10 +17,11 @@ import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
-import { MissionFileManageComponent } from './manage/mission-file-manage.component';
+import { MissionFileManagerComponent } from './manager/mission-file-manager.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FileUploadModule } from 'primeng/fileupload';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
     imports: [
@@ -44,7 +45,9 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
         InputNumberModule,
         FileUploadModule,
         AutoCompleteModule,
+        ReactiveFormsModule,
+        InputTextareaModule,
     ],
-    declarations: [MissionFileComponent, MissionFileManageComponent],
+    declarations: [MissionFileComponent, MissionFileManagerComponent],
 })
 export class MissionFileModule {}

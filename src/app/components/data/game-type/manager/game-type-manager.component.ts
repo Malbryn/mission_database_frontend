@@ -12,11 +12,11 @@ import { GameTypeService } from '../../../../services/game-type.service';
 import { Router } from '@angular/router';
 
 @Component({
-    templateUrl: './game-type-manage.component.html',
+    templateUrl: './game-type-manager.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class GameTypeManageComponent implements OnInit {
+export class GameTypeManagerComponent implements OnInit {
     currentGameType!: GameType | any;
     gameTypes: GameType[] = [];
     newDialog: boolean = false;
