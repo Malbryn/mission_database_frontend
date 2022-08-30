@@ -23,17 +23,9 @@ export class JwtInterceptor implements HttpInterceptor {
         const isApiUrl = request.url.startsWith(environment.API_URL);
 
         if (isLoggedIn && isApiUrl) {
-            let headers = new HttpHeaders({
+            const headers = new HttpHeaders({
                 Authorization: `Bearer ${user.access}`,
-                'Content-Type': 'application/json',
             });
-
-            if (request.url && request.url.indexOf('mission_files') !== -1) {
-                headers = new HttpHeaders({
-                    Authorization: `Bearer ${user.access}`,
-                    'Content-Type': 'multipart/form-data',
-                });
-            }
 
             request = request.clone({ headers });
         }

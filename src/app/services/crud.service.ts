@@ -11,9 +11,7 @@ export abstract class CRUDService<T> {
         this.URL = CRUDService.URL_BASE + url;
     }
 
-    create(value: T): Observable<T> {
-        console.log('CREATE QUERY: ', value);
-
+    create(value: FormData | Partial<any>): Observable<T> {
         return this.http
             .post<T>(this.URL, value)
             .pipe(catchError(this.handleError));
@@ -35,16 +33,14 @@ export abstract class CRUDService<T> {
         return this.http.get<T[]>(this.URL).pipe(catchError(this.handleError));
     }
 
-    update(id: number, value: T): Observable<T> {
-        console.log('UPDATE QUERY: ', value);
-
+    update(id: number, value: FormData | Partial<any>): Observable<T> {
         return this.http
             .patch<T>(this.URL + id + '/', value)
             .pipe(catchError(this.handleError));
     }
 
     protected handleError(error: HttpErrorResponse): Observable<never> {
-        console.error(`An error occurred: ${error.message}`, error.error);
+        console.error('An error occurred:', error);
 
         return throwError(
             () => new Error('Something bad happened, please try again later.')

@@ -6,14 +6,14 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-info mr-2"
-                                (click)="goBack()"></button>
+                                (click)="goBack('mission-files')"></button>
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-                                (click)="openNew()"></button>
+                                (click)="create()"></button>
                     </div>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="missionFiles" [columns]="cols" responsiveLayout="scroll" [loading]="loading"
+            <p-table #dt [value]="missionFiles" [columns]="cols" responsiveLayout="scroll" [loading]="isLoading"
                      [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
@@ -71,7 +71,8 @@
                         </td>
                         <td style="width: 5%; min-width: 12rem;">
                             <span class="p-column-title">Download URL</span>
-                            <a href="{{missionFile.downloadUrl}}" target="_blank">Link</a>
+                            <button pButton pRipple label="Download" icon="pi pi-download" class="p-button-info"
+                                    (click)="downloadMissionFile(missionFile.downloadUrl, missionFile.name)"></button>
                         </td>
                         <td style="width: 40%; min-width: 12rem;">
                             <span class="p-column-title">Description</span>
@@ -85,9 +86,9 @@
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil"
                                         class="p-button-rounded p-button-warning mr-2"
-                                        (click)="editMissionFile(missionFile)"></button>
+                                        (click)="edit(missionFile)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                        (click)="deleteMissionFile(missionFile)"></button>
+                                        (click)="delete(missionFile)"></button>
                             </div>
                         </td>
                     </tr>
@@ -97,54 +98,50 @@
 
         <p-dialog [(visible)]="newDialog" [style]="{width: '600px'}" header="Mission file" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="selectedMissionFile!.name" required autofocus/>
-                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.name">Name is required.</small>
-                </div>
-                <div class="field">
-                    <label for="mission">Mission</label>
-                    <p-autoComplete id="mission" [(ngModel)]="selectedMission" [suggestions]="filteredMissions"
-                                    (completeMethod)="filterMission($event)" field="name" [dropdown]="true"
-                                    [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMissionFile.mission}">
-                    </p-autoComplete>
-                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.mission">Mission is required.</small>
-                </div>
-                <div class="field">
-                    <label for="name">Version</label>
-                    <p-inputNumber mode="decimal" [(ngModel)]="selectedVersion" [showButtons]="true" [min]="0" [max]="500"></p-inputNumber>
-                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.version">Version is required.</small>
-                </div>
-                <div class="field" *ngIf="selectedMissionFile.id">
-                    <label for="path">Path</label>
-                    <input type="text" pInputText id="path" [(ngModel)]="selectedMissionFile!.path" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMissionFile.path}"/>
-                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.path">Path is required.</small>
-                </div>
-                <div class="field" *ngIf="selectedMissionFile.id">
-                    <label for="url">URL</label>
-                    <input type="text" pInputText id="url" [(ngModel)]="selectedMissionFile!.downloadUrl" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMissionFile.downloadUrl}"/>
-                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.downloadUrl">Download URL is required.</small>
-                </div>
-                <div class="field">
-                    <label for="description">Description</label>
-                    <textarea pInputTextarea  [rows]="8" type="text" id="description" autoResize="autoResize" [(ngModel)]="selectedMissionFile!.description"
-                              required style="resize: none; width: 100%" class="p-inputtextarea p-inputtext p-component p-element"></textarea>
-                    <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMissionFile.description">Description is required.</small>
-                </div>
-                <div class="field" *ngIf="!selectedMissionFile.id">
-                    <label for="fileUpload">Upload mission file</label>
-                    <p-fileUpload id="fileUpload" name="missionFile" accept=".pbo" [maxFileSize]="10000000" [fileLimit]="1" [showUploadButton]="false"
-                                  [showCancelButton]="false" [previewWidth]="0" [customUpload]="true" (onSelect)="onFileUpload($event)"></p-fileUpload>
-                </div>
+                <form id="missionFileForm" enctype="multipart/form-data" [formGroup]="missionFileForm" (ngSubmit)="save()">
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input id="name" type="text" formControlName="name" pInputText [required]="true" autofocus/>
+                    </div>
+                    <div class="field">
+                        <label for="mission">Mission</label>
+                        <p-autoComplete id="mission" formControlName="mission" field="name" [required]="true" [suggestions]="filteredMissions"
+                                        [dropdown]="true" (completeMethod)="filterMission($event)">
+                        </p-autoComplete>
+                    </div>
+                    <div class="field">
+                        <label for="version">Version</label>
+                        <p-inputNumber id="version" formControlName="version" mode="decimal" [required]="true" [showButtons]="true"
+                                       [min]="0" [max]="999">
+                        </p-inputNumber>
+                    </div>
+                    <div *ngIf="selectedMissionFile.id" class="field">
+                        <label for="path">Path</label>
+                        <input id="path" type="text" formControlName="path" pInputText [required]="true"/>
+                    </div>
+                    <div *ngIf="selectedMissionFile.id" class="field">
+                        <label for="url">URL</label>
+                        <input id="url" type="text" formControlName="url" pInputText [required]="true"/>
+                    </div>
+                    <div class="field">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="p-inputtextarea p-inputtext p-component p-element" style="resize: none; width: 100%"
+                                  type="text" formControlName="description" pInputTextarea [required]="true" [rows]="8" [autoResize]="false">
+                        </textarea>
+                    </div>
+                    <div *ngIf="!selectedMissionFile.id" class="field">
+                        <label for="file">Upload mission file</label>
+                        <p-fileUpload id="file" formControlName="file" name="uploadedMissionFile" accept=".pbo" ngDefaultControl [required]="true"
+                                      [maxFileSize]="10000000" [fileLimit]="1" [showUploadButton]="false" [showCancelButton]="false" [previewWidth]="0"
+                                      [customUpload]="true" (onSelect)="onFileSelect($event)">
+                        </p-fileUpload>
+                    </div>
+                </form>
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                        (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-                        (click)="saveMissionFile()"></button>
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="closeDialog()"></button>
+                <button type="submit" form="missionFileForm" pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"></button>
             </ng-template>
         </p-dialog>
 
