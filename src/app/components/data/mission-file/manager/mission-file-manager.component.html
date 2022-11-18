@@ -8,12 +8,12 @@
                         <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-info mr-2"
                                 (click)="goBack('mission-files')"></button>
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-                                (click)="create()"></button>
+                                (click)="handleCreate()"></button>
                     </div>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="missionFiles" [columns]="cols" responsiveLayout="scroll" [loading]="isLoading"
+            <p-table #dt [value]="data" [columns]="cols" responsiveLayout="scroll" [loading]="isLoading"
                      [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
@@ -40,14 +40,11 @@
                         <th pSortableColumn="path">Path
                             <p-sortIcon field="path"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="url">Download URL
-                            <p-sortIcon field="url"></p-sortIcon>
-                        </th>
                         <th pSortableColumn="description">Description
                             <p-sortIcon field="description"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="created">Created
-                            <p-sortIcon field="created"></p-sortIcon>
+                        <th pSortableColumn="createdAt">Created
+                            <p-sortIcon field="createdAt"></p-sortIcon>
                         </th>
                         <th></th>
                     </tr>
@@ -69,11 +66,6 @@
                             <span class="p-column-title">Path</span>
                             {{missionFile.path}}
                         </td>
-                        <td style="width: 5%; min-width: 12rem;">
-                            <span class="p-column-title">Download URL</span>
-                            <button pButton pRipple label="Download" icon="pi pi-download" class="p-button-info"
-                                    (click)="downloadMissionFile(missionFile.downloadUrl, missionFile.name)"></button>
-                        </td>
                         <td style="width: 40%; min-width: 12rem;">
                             <span class="p-column-title">Description</span>
                             {{missionFile.description}}
@@ -84,11 +76,13 @@
                         </td>
                         <td>
                             <div class="flex">
+                                <button pButton pRipple icon="pi pi-download" class="p-button-rounded p-button-info mr-2"
+                                        (click)="downloadMissionFile(missionFile.downloadUrl, missionFile.name)"></button>
                                 <button pButton pRipple icon="pi pi-pencil"
                                         class="p-button-rounded p-button-warning mr-2"
-                                        (click)="edit(missionFile)"></button>
+                                        (click)="handleEdit(missionFile)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                        (click)="delete(missionFile)"></button>
+                                        (click)="handleDelete(missionFile)"></button>
                             </div>
                         </td>
                     </tr>
@@ -98,30 +92,28 @@
 
         <p-dialog [(visible)]="newDialog" [style]="{width: '600px'}" header="Mission file" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <form id="missionFileForm" enctype="multipart/form-data" [formGroup]="missionFileForm" (ngSubmit)="save()">
-                    <div class="field">
-                        <label for="name">Name</label>
-                        <input id="name" type="text" formControlName="name" pInputText [required]="true" autofocus/>
-                    </div>
-                    <div class="field">
+                <form id="missionFileForm" enctype="multipart/form-data" [formGroup]="form" (ngSubmit)="handleSave()">
+                    <div *ngIf="!form.controls['id'].value" class="field">
                         <label for="mission">Mission</label>
-                        <p-autoComplete id="mission" formControlName="mission" field="name" [required]="true" [suggestions]="filteredMissions"
-                                        [dropdown]="true" (completeMethod)="filterMission($event)">
+                        <p-autoComplete id="mission" formControlName="mission" field="name" [required]="true"
+                                        [suggestions]="filteredMissions" [dropdown]="true" (completeMethod)="filterMission($event)">
                         </p-autoComplete>
                     </div>
-                    <div class="field">
+                    <div *ngIf="!form.controls['id'].value" class="field">
                         <label for="version">Version</label>
                         <p-inputNumber id="version" formControlName="version" mode="decimal" [required]="true" [showButtons]="true"
                                        [min]="0" [max]="999">
                         </p-inputNumber>
                     </div>
-                    <div *ngIf="selectedMissionFile.id" class="field">
+                    <!-- Temporarily disabled -->
+                    <div *ngIf="false" class="field">
                         <label for="path">Path</label>
                         <input id="path" type="text" formControlName="path" pInputText [required]="true"/>
                     </div>
-                    <div *ngIf="selectedMissionFile.id" class="field">
-                        <label for="url">URL</label>
-                        <input id="url" type="text" formControlName="url" pInputText [required]="true"/>
+                    <!-- Temporarily disabled -->
+                    <div *ngIf="false" class="field">
+                        <label for="downloadUrl">URL</label>
+                        <input id="downloadUrl" type="text" formControlName="downloadUrl" pInputText [required]="true"/>
                     </div>
                     <div class="field">
                         <label for="description">Description</label>
@@ -129,7 +121,7 @@
                                   type="text" formControlName="description" pInputTextarea [required]="true" [rows]="8" [autoResize]="false">
                         </textarea>
                     </div>
-                    <div *ngIf="!selectedMissionFile.id" class="field">
+                    <div *ngIf="!form.controls['id'].value" class="field">
                         <label for="file">Upload mission file</label>
                         <p-fileUpload id="file" formControlName="file" name="uploadedMissionFile" accept=".pbo" ngDefaultControl [required]="true"
                                       [maxFileSize]="10000000" [fileLimit]="1" [showUploadButton]="false" [showCancelButton]="false" [previewWidth]="0"
@@ -140,7 +132,7 @@
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="closeDialog()"></button>
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="closeNewDialog()"></button>
                 <button type="submit" form="missionFileForm" pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"></button>
             </ng-template>
         </p-dialog>
@@ -148,7 +140,7 @@
         <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="selectedMissionFile">Are you sure you want to delete <b>{{selectedMissionFile.name}}</b>?</span>
+                <span *ngIf="selectedValue">Are you sure you want to delete <b>{{selectedValue.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteDialog = false"></button>

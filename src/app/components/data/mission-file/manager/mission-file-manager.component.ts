@@ -1,15 +1,16 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MissionFile } from '../../../../models/MissionFile';
+import { MissionFile } from '../../../../models/mission-file';
 import { MissionFileService } from '../../../../services/mission-file.service';
 import { Router } from '@angular/router';
 import { MissionService } from '../../../../services/mission.service';
-import { Mission } from '../../../../models/Mission';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Mission } from '../../../../models/mission';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-import { AbstractManagerComponent } from '../../../../helpers/abstract-manager.component';
+import { AbstractManagerComponent } from '../../common/abstract-manager.component';
 import { saveAs } from 'file-saver';
 import { environment } from '../../../../../environments/environment';
+import { MessageType } from '../../../../models/message-type';
 
 @Component({
     templateUrl: './mission-file-manager.component.html',
@@ -18,25 +19,9 @@ import { environment } from '../../../../../environments/environment';
     providers: [MessageService, ConfirmationService],
 })
 export class MissionFileManagerComponent
-    extends AbstractManagerComponent
+    extends AbstractManagerComponent<MissionFile>
     implements OnInit
 {
-    missionFileForm = this.formBuilder.group({
-        id: new FormControl(),
-        name: new FormControl(),
-        mission: new FormControl(),
-        version: new FormControl(),
-        path: new FormControl(),
-        url: new FormControl(),
-        description: new FormControl(),
-        file: new FormControl(),
-        created_by: new FormControl(),
-    });
-
-    // Mission files
-    missionFiles: MissionFile[] = [];
-    selectedMissionFile!: MissionFile;
-
     // Missions
     missions: Mission[] = [];
     selectedMission!: Mission;
@@ -47,130 +32,79 @@ export class MissionFileManagerComponent
         formBuilder: FormBuilder,
         authService: AuthService,
         messageService: MessageService,
-        private service: MissionFileService,
+        service: MissionFileService,
         private missionService: MissionService
     ) {
-        super(router, formBuilder, authService, messageService);
+        super(router, formBuilder, authService, messageService, service);
+
+        this.form = this.formBuilder.group({
+            id: new FormControl(),
+            mission: new FormControl(),
+            name: new FormControl(),
+            version: new FormControl(),
+            path: new FormControl(),
+            downloadUrl: new FormControl(),
+            description: new FormControl(),
+            createdAt: new FormControl(),
+            createdBy: new FormControl(),
+            file: new FormControl(),
+        });
     }
 
     override ngOnInit(): void {
         super.ngOnInit();
 
-        this.service.getAll().subscribe((data: MissionFile[]) => {
-            this.missionFiles = data;
-            this.isLoading = false;
-        });
-
-        this.missionService.getAll().subscribe((data: Mission[]) => {
-            this.missions = data;
+        this.missionService.getAll().subscribe({
+            next: (value) => {
+                this.missions = value;
+            },
+            error: (error) => this.handleError(error),
         });
     }
 
-    create(): void {
-        this.selectedMissionFile = {} as MissionFile;
+    override handleCreate(): void {
+        this.form.reset();
         this.selectedMission = {} as Mission;
-        this.submitted = false;
-        this.newDialog = true;
+
+        this.openNewDialog();
     }
 
-    edit(missionFile: MissionFile) {
-        this.selectedMissionFile = { ...missionFile };
-        this.selectedMission = this.findMissionByID(missionFile.mission);
-        this.submitted = false;
-        this.newDialog = true;
+    override handleEdit(data: MissionFile) {
+        this.form.setValue({ ...data });
+        this.selectedMission = this.findMissionByID(data.mission);
+        this.form.controls['mission'].patchValue(this.selectedMission);
+
+        this.openNewDialog();
     }
 
-    delete(missionFile: MissionFile) {
-        this.selectedMissionFile = { ...missionFile };
-        this.deleteDialog = true;
-    }
+    override handleSave() {
+        if (this.form.valid) {
+            this.closeNewDialog();
+            this.setLoadingState(true);
 
-    save() {
-        this.submitted = true;
-
-        if (this.missionFileForm.valid) {
-            const form = this.missionFileForm;
-
-            form.controls.mission.setValue(form.controls.mission.value.id);
+            const form = this.form;
+            form.controls['mission'].setValue(
+                form.controls['mission'].value.id
+            );
+            let formData = form.value;
 
             if (form.value.id) {
-                const formData = this.getFormData(form);
+                formData.delete('file');
 
-                this.service
-                    .update(form.controls.mission.value.id, formData)
-                    .subscribe(
-                        (response) => {
-                            this.missionFiles[
-                                this.findMissionIndexById(response.id)
-                            ] = this.selectedMissionFile;
-
-                            this.missionFiles = [...this.missionFiles];
-                            this.selectedMissionFile = {} as MissionFile;
-                            this.newDialog = false;
-
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Success',
-                                detail: 'Mission file updated',
-                                life: 3000,
-                            });
-                        },
-                        (error) => console.log(error)
-                    );
+                this.update(formData);
             } else {
-                form.controls.created_by.setValue(
+                // TODO: TESTING ONLY
+                form.controls['createdBy'].setValue(
                     this.authService.userValue.id
                 );
+                formData = form.value;
+                formData.set('missionId', '1');
+                formData.set('createdById', '1');
 
-                const formData = this.getFormData(form);
-
-                this.service.create(formData).subscribe(
-                    (response) => {
-                        this.missionFiles.push(response);
-
-                        this.missionFiles = [...this.missionFiles];
-                        this.selectedMissionFile = {} as MissionFile;
-                        this.newDialog = false;
-
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: 'Mission file created',
-                            life: 3000,
-                        });
-                    },
-                    (error) => console.log(error)
-                );
+                this.create(formData);
             }
-        }
-    }
-
-    confirmDelete() {
-        this.deleteDialog = false;
-
-        if (this.selectedMissionFile.id) {
-            this.service
-                .delete(this.selectedMissionFile.id)
-                .subscribe((data) => {
-                    this.missionFiles = this.missionFiles.filter(
-                        (value) => value.id !== this.selectedMissionFile.id
-                    );
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: 'Mission file deleted',
-                        life: 3000,
-                    });
-                });
         } else {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: "Couldn't remove Mission file",
-                life: 3000,
-            });
-
-            this.selectedMissionFile = {} as MissionFile;
+            this.showToastMessage(MessageType.WARNING, 'Invalid input data');
         }
     }
 
@@ -188,8 +122,8 @@ export class MissionFileManagerComponent
     }
 
     onFileSelect(event: any): void {
-        this.missionFileForm.patchValue({ file: event.files[0] });
-        this.missionFileForm.get('file')?.updateValueAndValidity();
+        this.form.patchValue({ file: event.files[0] });
+        this.form.get('file')?.updateValueAndValidity();
     }
 
     async downloadMissionFile(url: string, fileName: string): Promise<void> {
@@ -202,33 +136,11 @@ export class MissionFileManagerComponent
         });
 
         const content = await response.blob();
-        saveAs(content, `${fileName}.pbo`);
+        await saveAs(content, `${fileName}.pbo`);
     }
 
     private findMissionByID(id: number): Mission {
         const mission = this.missions.find((element) => element.id === id);
         return mission === undefined ? ({} as Mission) : mission;
-    }
-
-    private findMissionIndexById(id: number): number {
-        let index = -1;
-        for (let i = 0; i < this.missionFiles.length; i++) {
-            if (this.missionFiles[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
-
-    private getFormData(form: FormGroup): FormData {
-        const formData = new FormData();
-
-        Object.keys(form.controls).forEach((formControlName) => {
-            formData.append(formControlName, form.get(formControlName)?.value);
-        });
-
-        return formData;
     }
 }

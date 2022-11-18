@@ -1,11 +1,13 @@
-export interface MissionFile {
-    id: number;
+import { AbstractData } from './abstract-data';
+
+export interface MissionFile extends AbstractData {
     mission: number;
     name: string;
+    version: number;
     path: string;
     downloadUrl: string;
-    version: number;
     description: string;
+    createdBy: number;
     createdAt: string;
     file: File;
 }

@@ -5,67 +5,109 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-info mr-2"
-                                (click)="goBack()"></button>
-                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-                                (click)="openNew()"></button>
+                        <button
+                            pButton
+                            pRipple
+                            label="Back"
+                            icon="pi pi-arrow-left"
+                            class="p-button-info mr-2"
+                            (click)="goBack('missions')"
+                        ></button>
+                        <button
+                            pButton
+                            pRipple
+                            label="New"
+                            icon="pi pi-plus"
+                            class="p-button-success mr-2"
+                            (click)="handleCreate()"
+                        ></button>
                     </div>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="missions" [columns]="cols" responsiveLayout="scroll" [loading]="loading"
-                     [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
-                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
-                     dataKey="id">
+            <p-table
+                #dt
+                [value]="data"
+                [columns]="cols"
+                responsiveLayout="scroll"
+                [loading]="isLoading"
+                [globalFilterFields]="['name']"
+                [rows]="20"
+                [paginator]="true"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowHover]="true"
+                dataKey="id"
+            >
                 <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <div
+                        class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    >
                         <h5 class="m-0">Manage missions</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
-                                   class="w-full sm:w-auto"/>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="onGlobalFilter(dt, $event)"
+                                placeholder="Search..."
+                                class="w-full sm:w-auto"
+                            />
                         </span>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="code">ID
-                            <p-sortIcon field="code"></p-sortIcon>
+                        <th pSortableColumn="id">
+                            ID
+                            <p-sortIcon field="id"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="name">Name
+                        <th pSortableColumn="name">
+                            Name
                             <p-sortIcon field="name"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="map">Map
+                        <th pSortableColumn="map">
+                            Map
                             <p-sortIcon field="map"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="author">Author
+                        <th pSortableColumn="author">
+                            Author
                             <p-sortIcon field="author"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="gameType">Game type
+                        <th pSortableColumn="gameType">
+                            Game type
                             <p-sortIcon field="gameType"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="slotsMin">Min. slots
+                        <th pSortableColumn="slotsMin">
+                            Min. slots
                             <p-sortIcon field="slotsMin"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="slotsMax">Max. slots
+                        <th pSortableColumn="slotsMax">
+                            Max. slots
                             <p-sortIcon field="slotsMax"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="createdAt">Created at
+                        <th pSortableColumn="createdAt">
+                            Created at
                             <p-sortIcon field="createdAt"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="createdBy">Created by
+                        <th pSortableColumn="createdBy">
+                            Created by
                             <p-sortIcon field="createdBy"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="status">Status
+                        <th pSortableColumn="status">
+                            Status
                             <p-sortIcon field="status"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="modset">Modset
+                        <th pSortableColumn="modset">
+                            Modset
                             <p-sortIcon field="modset"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="dlc">DLC
+                        <th pSortableColumn="dlc">
+                            DLC
                             <p-sortIcon field="dlc"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="description">Description
+                        <th pSortableColumn="description">
+                            Description
                             <p-sortIcon field="description"></p-sortIcon>
                         </th>
                         <th></th>
@@ -73,64 +115,86 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-mission>
                     <tr>
-                        <td style="min-width: 12rem;"><span class="p-column-title">ID</span>
-                            {{mission.id}}
+                        <td style="min-width: 12rem">
+                            <span class="p-column-title">ID</span>
+                            {{ mission.id }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Name</span>
-                            {{mission.name}}
+                            {{ mission.name }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Map</span>
-                            {{mission.map.name}}
+                            {{ mission.map.name }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Author</span>
-                            {{mission.author}}
+                            {{ mission.author }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Game type</span>
-                            {{mission.gameType.name}}
+                            {{ mission.gameType.name }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Min. slots</span>
-                            {{mission.slotsMin}}
+                            {{ mission.slotsMin }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Max. slots</span>
-                            {{mission.slotsMax}}
+                            {{ mission.slotsMax }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Created at</span>
-                            {{mission.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
+                            {{
+                                mission.createdAt | date: "yyyy-MM-dd, hh:mm a"
+                            }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Created by</span>
-                            {{mission.createdBy.username}}
+                            {{ mission.createdBy.username }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Status</span>
-                            <span [class]="'status-badge status-' + mission.status.name.toLowerCase()">{{mission.status.name}}</span>
+                            <span
+                                [class]="
+                                    'status-badge status-' +
+                                    mission.status.name.toLowerCase()
+                                "
+                                >{{ mission.status.name }}</span
+                            >
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">Modset</span>
-                            {{mission.modset.name}}
+                            {{ mission.modset.name }}
                         </td>
-                        <td style="min-width: 12rem;">
+                        <td style="min-width: 12rem">
                             <span class="p-column-title">DLC</span>
-                            <p-chip *ngFor="let dlc of mission.dlc" [label]="dlc.name" class="mr-2"></p-chip>
+                            <p-chip
+                                *ngFor="let dlc of mission.dlcs"
+                                [label]="dlc.name"
+                                class="mr-2"
+                            ></p-chip>
                         </td>
-                        <td style="min-width: 24rem;">
+                        <td style="min-width: 24rem">
                             <span class="p-column-title">Description</span>
-                            {{mission.description}}
+                            {{ mission.description }}
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil"
-                                        class="p-button-rounded p-button-warning mr-2"
-                                        (click)="editMission(mission)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                        (click)="deleteMission(mission)"></button>
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-warning mr-2"
+                                    (click)="handleEdit(mission)"
+                                ></button>
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-danger"
+                                    (click)="handleDelete(mission)"
+                                ></button>
                             </div>
                         </td>
                     </tr>
@@ -138,104 +202,217 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="newDialog" [style]="{width: '1200px', height: '100%'}" header="Mission" [modal]="true" class="p-fluid">
+        <p-dialog
+            [(visible)]="newDialog"
+            [style]="{ width: '1200px', height: '100%' }"
+            header="Mission"
+            [modal]="true"
+            class="p-fluid"
+        >
             <ng-template pTemplate="content">
-                <div class="col-12">
-                    <div class="p-fluid p-formgrid grid">
-                        <div class="col-12 md:col-4">
-                            <label for="name">Name</label>
-                            <input type="text" pInputText id="name" [(ngModel)]="selectedMission!.name" autofocus required
-                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMission.name}"/>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.name">Name is required.</small>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Map</label>
-                            <p-autoComplete [(ngModel)]="selectedMap" [suggestions]="filteredMaps"
-                                            (completeMethod)="filterMap($event)" field="name" [dropdown]="true"
-                                            [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMission.map}">
-                            </p-autoComplete>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.map.name">Map is required.</small>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Author</label>
-                            <input type="text" pInputText id="author" [(ngModel)]="selectedMission!.author" required
-                                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedMission.author}"/>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.author">Author is required.</small>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Modset</label>
-                            <p-autoComplete [(ngModel)]="selectedModset" [suggestions]="filteredModsets"
-                                            (completeMethod)="filterModset($event)" field="name" [dropdown]="true">
-                            </p-autoComplete>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.modset">Modset is required.</small>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Min. slots</label>
-                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMin" [showButtons]="true" [min]="0" [max]="500"></p-inputNumber>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Max. slots</label>
-                            <p-inputNumber mode="decimal" [(ngModel)]="selectedSlotsMax" [showButtons]="true" [min]="0" [max]="500"></p-inputNumber>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.slotsMax">Max. slots is required.</small>
-                        </div>
-                        <div class="col-12 md:col-8">
-                            <label for="name">DLC</label>
-                            <div class="col-12 md:col-12 flex align-content-start flex-wrap">
-                                <div *ngFor="let dlc of DLCs" class="field-checkbox pr-4">
-                                    <p-checkbox name="dlcGroup" [value]="dlc" [(ngModel)]="selectedDLCs" [label]="dlc.name"></p-checkbox>
+                <form
+                    id="dlcForm"
+                    enctype="multipart/form-data"
+                    [formGroup]="form"
+                    (ngSubmit)="handleSave()"
+                >
+                    <div class="col-12">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="col-12 md:col-4">
+                                <label for="name">Name</label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    formControlName="name"
+                                    pInputText
+                                    autofocus
+                                    [required]="true"
+                                />
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <label for="map">Map</label>
+                                <p-autoComplete
+                                    id="map"
+                                    formControlName="map"
+                                    field="name"
+                                    [required]="true"
+                                    [suggestions]="filteredMaps"
+                                    [dropdown]="true"
+                                    (completeMethod)="filterMap($event)"
+                                >
+                                </p-autoComplete>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <label for="author">Author</label>
+                                <input
+                                    id="author"
+                                    type="text"
+                                    formControlName="author"
+                                    pInputText
+                                    [required]="true"
+                                />
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <label for="modset">Modset</label>
+                                <p-autoComplete
+                                    id="modset"
+                                    formControlName="modset"
+                                    field="name"
+                                    [required]="true"
+                                    [suggestions]="filteredModsets"
+                                    [dropdown]="true"
+                                    (completeMethod)="filterModset($event)"
+                                >
+                                </p-autoComplete>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <label for="slotsMin">Min. slots</label>
+                                <p-inputNumber
+                                    id="slotsMin"
+                                    mode="decimal"
+                                    formControlName="slotsMin"
+                                    [showButtons]="true"
+                                    [min]="0"
+                                    [max]="500"
+                                    [required]="true"
+                                ></p-inputNumber>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <label for="slotsMax">Max. slots</label>
+                                <p-inputNumber
+                                    id="slotsMax"
+                                    mode="decimal"
+                                    formControlName="slotsMax"
+                                    [showButtons]="true"
+                                    [min]="0"
+                                    [max]="500"
+                                    [required]="true"
+                                ></p-inputNumber>
+                            </div>
+                            <div class="col-12 md:col-8">
+                                <label for="name">DLC</label>
+                                <div
+                                    class="col-12 md:col-12 flex align-content-start flex-wrap"
+                                >
+                                    <div
+                                        *ngFor="let dlc of DLCs"
+                                        class="field-checkbox pr-4"
+                                    >
+                                        <p-checkbox
+                                            name="dlcGroup"
+                                            formControlName="dlcs"
+                                            [label]="dlc.name"
+                                            [value]="dlc"
+                                        ></p-checkbox>
+                                    </div>
                                 </div>
                             </div>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.dlcs">DLC is required.</small>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Game type</label>
-                            <div class="col-12 md:col-12">
-                                <div *ngFor="let gameType of gameTypes" class="field-radiobutton">
-                                    <p-radioButton name="gameTypeGroup" [value]="gameType.id" [(ngModel)]="selectedGameType.id"
-                                                   [label]="gameType.name"></p-radioButton>
+                            <div class="col-12 md:col-4">
+                                <label for="name">Game type</label>
+                                <div class="col-12 md:col-12">
+                                    <div
+                                        *ngFor="let gameTypeOption of gameTypes"
+                                        class="field-radiobutton"
+                                    >
+                                        <p-radioButton
+                                            formControlName="gameType"
+                                            [label]="gameTypeOption.name"
+                                            [value]="gameTypeOption.id"
+                                        ></p-radioButton>
+                                    </div>
                                 </div>
                             </div>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.gameType">Game type is required.</small>
-                        </div>
-                        <div class="col-12 md:col-8">
-                            <label for="description">Description</label>
-                            <div class="col-12 md:col-12">
-                                <textarea pInputTextarea  [rows]="8" type="text" id="description" autoResize="autoResize" [(ngModel)]="selectedMission!.description" required
-                                          style="resize: none; width: inherit" class="p-inputtextarea p-inputtext p-component p-element"></textarea>
-                            </div>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.description">Description is required.</small>
-                        </div>
-                        <div class="col-12 md:col-4">
-                            <label for="name">Status</label>
-                            <div class="col-12 md:col-12">
-                                <div *ngFor="let status of statuses" class="field-radiobutton">
-                                    <p-radioButton name="statusGroup" [value]="status.id" [(ngModel)]="selectedStatus.id" [label]="status.name"></p-radioButton>
+                            <div class="col-12 md:col-8">
+                                <label for="description">Description</label>
+                                <div class="col-12 md:col-12">
+                                    <textarea
+                                        id="description"
+                                        type="text"
+                                        formControlName="description"
+                                        pInputTextarea
+                                        style="resize: none; width: inherit"
+                                        class="p-inputtextarea p-inputtext p-component p-element"
+                                        [rows]="8"
+                                        [autoResize]="true"
+                                        [required]="true"
+                                    ></textarea>
                                 </div>
                             </div>
-                            <small class="ng-dirty ng-invalid text-red-500" *ngIf="submitted && !selectedMission.status">Status is required.</small>
+                            <div class="col-12 md:col-4">
+                                <label for="name">Status</label>
+                                <div class="col-12 md:col-12">
+                                    <div
+                                        *ngFor="let status of statuses"
+                                        class="field-radiobutton"
+                                    >
+                                        <p-radioButton
+                                            name="status"
+                                            formControlName="status"
+                                            [label]="status.name"
+                                            [value]="status.id"
+                                        ></p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                        (click)="hideDialog()"></button>
-                <!--<button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-                        (click)="saveMission()"></button>-->
+                <button
+                    pButton
+                    pRipple
+                    label="Cancel"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    (click)="closeNewDialog()"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    label="Save"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    (click)="handleSave()"
+                ></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog
+            [(visible)]="deleteDialog"
+            header="Confirm"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
             <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="selectedMission">Are you sure you want to delete <b>{{selectedMission.name}}</b>?</span>
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span *ngIf="selectedValue"
+                    >Are you sure you want to delete
+                    <b>{{ selectedValue.name }}</b
+                    >?</span
+                >
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                        (click)="deleteDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
-                        (click)="confirmDelete()"></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="No"
+                    (click)="deleteDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Yes"
+                    (click)="confirmDelete()"
+                ></button>
             </ng-template>
         </p-dialog>
     </div>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MissionComponent } from './mission.component';
 import { MissionRoutingModule } from './mission-routing.module';
 import { TableModule } from 'primeng/table';
@@ -22,6 +22,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
     imports: [
@@ -46,6 +47,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
         InputNumberModule,
         CheckboxModule,
         RadioButtonModule,
+        ReactiveFormsModule,
+        InputTextareaModule,
     ],
     declarations: [MissionComponent, MissionManagerComponent],
 })

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { NotFoundComponent } from './components/notfound/notfound.component';
 import { AppLayoutComponent } from './components/layout/app.layout.component';
 import { AccessComponent } from './components/auth/access/access.component';
-import { Role } from './models/Role';
+import { Role } from './models/role';
 import { AuthGuard } from './helpers/auth.guard';
 
 @NgModule({
@@ -15,7 +15,7 @@ import { AuthGuard } from './helpers/auth.guard';
                     component: AppLayoutComponent,
                     loadChildren: () =>
                         import('./components/dashboard/dashboard.module').then(
-                            (m) => m.DashboardModule
+                            (module) => module.DashboardModule
                         ),
                     canActivate: [AuthGuard],
                     data: { roles: [Role.MEMBER] },
@@ -25,7 +25,7 @@ import { AuthGuard } from './helpers/auth.guard';
                     component: AppLayoutComponent,
                     loadChildren: () =>
                         import('./components/data/data.module').then(
-                            (m) => m.DataModule
+                            (module) => module.DataModule
                         ),
                     canActivate: [AuthGuard],
                     data: { roles: [Role.MEMBER] },
@@ -34,7 +34,7 @@ import { AuthGuard } from './helpers/auth.guard';
                     path: 'auth',
                     loadChildren: () =>
                         import('./components/auth/auth.module').then(
-                            (m) => m.AuthModule
+                            (module) => module.AuthModule
                         ),
                 },
                 { path: 'notfound', component: NotFoundComponent },

@@ -1,5 +1,5 @@
 import { AbstractData } from './abstract-data';
 
-export interface Status extends AbstractData {
+export interface DLC extends AbstractData {
     name: string;
 }

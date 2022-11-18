@@ -1,12 +1,13 @@
-import { Map } from './Map';
-import { GameType } from './GameType';
-import { User } from './User';
+import { Map } from './map';
+import { GameType } from './game-type';
+import { User } from './user';
 import { Status } from './Status';
-import { Modset } from './Modset';
-import { DLC } from './DLC';
-import { MissionFile } from './MissionFile';
+import { Modset } from './modset';
+import { DLC } from './dlc';
+import { MissionFile } from './mission-file';
+import { AbstractData } from './abstract-data';
 
-export interface Mission {
+export interface Mission extends AbstractData {
     id: number;
     name: string;
     map: Map;

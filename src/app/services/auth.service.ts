@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../models/User';
+import { User } from '../models/user';
 import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
-    public user: Observable<User>;
+    user: Observable<User>;
     private userSubject: BehaviorSubject<User>;
 
     constructor(private router: Router, private http: HttpClient) {
@@ -29,7 +29,7 @@ export class AuthService {
 
     logIn(username: string, password: string) {
         return this.http
-            .post<any>(`${environment.API_URL}/auth/authenticate/`, {
+            .post<any>(`${environment.API_URL}/auth/login/`, {
                 username,
                 password,
             })

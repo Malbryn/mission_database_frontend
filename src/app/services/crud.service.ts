@@ -1,7 +1,6 @@
 import { environment } from '../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export abstract class CRUDService<T> {
     protected static readonly URL_BASE = environment.API_URL;
@@ -11,39 +10,27 @@ export abstract class CRUDService<T> {
         this.URL = CRUDService.URL_BASE + url;
     }
 
-    create(value: FormData | Partial<any>): Observable<T> {
-        return this.http
-            .post<T>(this.URL, value)
-            .pipe(catchError(this.handleError));
+    create(value: FormData | Partial<any> | any): Observable<T> {
+        return this.http.post<T>(this.URL, value).pipe();
     }
 
     delete(id: number): Observable<T> {
-        return this.http
-            .delete<T>(this.URL + id)
-            .pipe(catchError(this.handleError));
+        return this.http.delete<T>(this.URL + id).pipe();
     }
 
     get(id: number): Observable<T> {
-        return this.http
-            .get<T>(this.URL + id)
-            .pipe(catchError(this.handleError));
+        return this.http.get<T>(this.URL + id).pipe();
     }
 
     getAll(): Observable<T[]> {
-        return this.http.get<T[]>(this.URL).pipe(catchError(this.handleError));
+        return this.http.get<T[]>(this.URL).pipe();
     }
 
     update(id: number, value: FormData | Partial<any>): Observable<T> {
-        return this.http
-            .patch<T>(this.URL + id + '/', value)
-            .pipe(catchError(this.handleError));
+        return this.http.patch<T>(this.URL + id + '/', value).pipe();
     }
 
-    protected handleError(error: HttpErrorResponse): Observable<never> {
-        console.error('An error occurred:', error);
-
-        return throwError(
-            () => new Error('Something bad happened, please try again later.')
-        );
+    patch(id: number, value: FormData | Partial<any>): Observable<T> {
+        return this.http.patch<T>(this.URL + id + '/', value).pipe();
     }
 }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GameTypeComponent } from './game-type.component';
 import { GameTypeRoutingModule } from './game-type-routing.module';
 import { TableModule } from 'primeng/table';
@@ -38,6 +38,7 @@ import { GameTypeManagerComponent } from './manager/game-type-manager.component'
         ChipModule,
         ToolbarModule,
         DialogModule,
+        ReactiveFormsModule,
     ],
     declarations: [GameTypeComponent, GameTypeManagerComponent],
 })

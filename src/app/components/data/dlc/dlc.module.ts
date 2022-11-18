@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DLCComponent } from './dlc.component';
 import { DLCRoutingModule } from './dlc-routing.module';
 import { TableModule } from 'primeng/table';
@@ -15,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
-import { DlcManagerComponent } from './manager/dlc-manager.component';
+import { DLCManagerComponent } from './manager/dlc-manager.component';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 
@@ -38,7 +38,8 @@ import { DialogModule } from 'primeng/dialog';
         ChipModule,
         ToolbarModule,
         DialogModule,
+        ReactiveFormsModule,
     ],
-    declarations: [DLCComponent, DlcManagerComponent],
+    declarations: [DLCComponent, DLCManagerComponent],
 })
 export class DLCModule {}

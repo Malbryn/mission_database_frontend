@@ -7,46 +7,50 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'dlcs',
                 loadChildren: () =>
-                    import('./dlc/dlc.module').then((m) => m.DLCModule),
+                    import('./dlc/dlc.module').then(
+                        (module) => module.DLCModule
+                    ),
             },
             {
                 path: 'game-types',
                 loadChildren: () =>
                     import('./game-type/game-type.module').then(
-                        (m) => m.GameTypeModule
+                        (module) => module.GameTypeModule
                     ),
             },
             {
                 path: 'maps',
                 loadChildren: () =>
-                    import('./map/map.module').then((m) => m.MapModule),
+                    import('./map/map.module').then(
+                        (module) => module.MapModule
+                    ),
             },
             {
                 path: 'missions',
                 loadChildren: () =>
                     import('./mission/mission.module').then(
-                        (m) => m.MissionModule
+                        (module) => module.MissionModule
                     ),
             },
             {
                 path: 'mission-files',
                 loadChildren: () =>
                     import('./mission-file/mission-file.module').then(
-                        (m) => m.MissionFileModule
+                        (module) => module.MissionFileModule
                     ),
             },
             {
                 path: 'modsets',
                 loadChildren: () =>
                     import('./modset/modset.module').then(
-                        (m) => m.ModsetModule
+                        (module) => module.ModsetModule
                     ),
             },
             {
                 path: 'statuses',
                 loadChildren: () =>
                     import('./status/status.module').then(
-                        (m) => m.StatusModule
+                        (module) => module.StatusModule
                     ),
             },
             { path: '**', redirectTo: '/' },

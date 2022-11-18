@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MapComponent } from './map.component';
 import { MapRoutingModule } from './map-routing.module';
 import { TableModule } from 'primeng/table';
@@ -38,6 +38,7 @@ import { MapManagerComponent } from './manager/map-manager.component';
         ChipModule,
         ToolbarModule,
         DialogModule,
+        ReactiveFormsModule,
     ],
     declarations: [MapComponent, MapManagerComponent],
 })

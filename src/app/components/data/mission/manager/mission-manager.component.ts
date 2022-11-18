@@ -1,264 +1,144 @@
-import {
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation,
-} from '@angular/core';
-import { Table } from 'primeng/table';
-import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
-import { Mission } from '../../../../models/Mission';
-import { Map } from '../../../../models/Map';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Mission } from '../../../../models/mission';
+import { Map } from '../../../../models/map';
 import { MissionService } from '../../../../services/mission.service';
 import { Router } from '@angular/router';
 import { MapService } from '../../../../services/map.service';
-import { GameType } from '../../../../models/GameType';
+import { GameType } from '../../../../models/game-type';
 import { GameTypeService } from '../../../../services/game-type.service';
 import { Status } from '../../../../models/Status';
 import { StatusService } from '../../../../services/status.service';
-import { DLC } from '../../../../models/DLC';
+import { DLC } from '../../../../models/dlc';
 import { DLCService } from '../../../../services/dlc.service';
-import { Modset } from '../../../../models/Modset';
+import { Modset } from '../../../../models/modset';
 import { ModsetService } from '../../../../services/modset.service';
 import { AuthService } from '../../../../services/auth.service';
+import { AbstractManagerComponent } from '../../common/abstract-manager.component';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { MessageType } from '../../../../models/message-type';
 
 @Component({
     templateUrl: './mission-manager.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [MessageService, ConfirmationService],
 })
-export class MissionManagerComponent implements OnInit {
-    // Missions
-    missions: Mission[] = [];
-    selectedMission!: Mission;
-
-    // Maps
+export class MissionManagerComponent
+    extends AbstractManagerComponent<Mission>
+    implements OnInit
+{
     maps: Map[] = [];
-    selectedMap!: Map;
-    filteredMaps: Map[] = [];
-
-    // Game types
     gameTypes: GameType[] = [];
-    selectedGameType!: GameType;
-
-    // Slots
-    selectedSlotsMin!: number;
-    selectedSlotsMax!: number;
-
-    // Statuses
     statuses: Status[] = [];
-    selectedStatus!: Status;
-
-    // Modsets
     modsets: Modset[] = [];
-    selectedModset!: Modset;
+    DLCs: DLC[] = [];
+
+    filteredMaps: Map[] = [];
     filteredModsets: Modset[] = [];
 
-    // DLC's
-    DLCs: DLC[] = [];
-    selectedDLCs: DLC[] = [];
-
-    @ViewChild('filter') filter!: ElementRef;
-    newDialog: boolean = false;
-    deleteDialog: boolean = false;
-    loading: boolean = true;
-    submitted: boolean = false;
-    cols: any[] = [];
-
     constructor(
-        private service: MissionService,
+        router: Router,
+        formBuilder: FormBuilder,
+        authService: AuthService,
+        messageService: MessageService,
+        service: MissionService,
         private mapService: MapService,
         private gameTypeService: GameTypeService,
         private statusService: StatusService,
         private modsetService: ModsetService,
-        private dlcService: DLCService,
-        private messageService: MessageService,
-        private router: Router,
-        private authService: AuthService
-    ) {}
+        private dlcService: DLCService
+    ) {
+        super(router, formBuilder, authService, messageService, service);
 
-    ngOnInit() {
-        this.service.getAll().subscribe((data: Mission[]) => {
-            this.missions = data;
-            this.loading = false;
+        this.form = this.formBuilder.group({
+            id: new FormControl(),
+            name: new FormControl(),
+            map: new FormControl(),
+            author: new FormControl(),
+            gameType: new FormControl(),
+            slotsMin: new FormControl(),
+            slotsMax: new FormControl(),
+            createdAt: new FormControl(),
+            createdBy: new FormControl(),
+            status: new FormControl(),
+            modset: new FormControl(),
+            dlcs: new FormControl(),
+            description: new FormControl(),
+            missionFiles: new FormControl(),
+        });
+    }
+
+    override ngOnInit() {
+        super.ngOnInit();
+
+        this.mapService.getAll().subscribe({
+            next: (data: Map[]) => {
+                this.maps = data;
+            },
+            error: (error) => this.handleError(error),
         });
 
-        this.mapService.getAll().subscribe((data: Map[]) => {
-            this.maps = data;
+        this.gameTypeService.getAll().subscribe({
+            next: (data: GameType[]) => {
+                this.gameTypes = data;
+            },
+            error: (error) => this.handleError(error),
         });
 
-        this.gameTypeService.getAll().subscribe((data: GameType[]) => {
-            this.gameTypes = data;
+        this.statusService.getAll().subscribe({
+            next: (data: Status[]) => {
+                this.statuses = data;
+            },
+            error: (error) => this.handleError(error),
         });
 
-        this.statusService.getAll().subscribe((data: Status[]) => {
-            this.statuses = data;
+        this.modsetService.getAll().subscribe({
+            next: (data: Modset[]) => {
+                this.modsets = data;
+            },
+            error: (error) => this.handleError(error),
         });
 
-        this.modsetService.getAll().subscribe((data: Modset[]) => {
-            this.modsets = data;
+        this.dlcService.getAll().subscribe({
+            next: (data: DLC[]) => {
+                this.DLCs = data;
+            },
+            error: (error) => this.handleError(error),
         });
-
-        this.dlcService.getAll().subscribe((data: DLC[]) => {
-            this.DLCs = data;
-        });
-
-        this.cols = [{ field: 'name', header: 'Name' }];
     }
 
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal(
-            (event.target as HTMLInputElement).value,
-            'contains'
-        );
+    override handleEdit(mission: Mission) {
+        this.form.setValue({ ...mission });
+
+        this.form.controls['gameType'].patchValue(mission.gameType.id);
+        this.form.controls['status'].patchValue(mission.status.id);
+
+        this.openNewDialog();
     }
 
-    clear(table: Table) {
-        table.clear();
-        this.filter.nativeElement.value = '';
-    }
+    override handleSave() {
+        if (this.form.valid) {
+            // this.closeNewDialog();
+            this.setLoadingState(true);
 
-    goBack() {
-        this.router.navigateByUrl('/data/missions');
-    }
+            const form = this.form;
+            // form.controls.map.setValue(form.controls.map.value.id);
+            // form.controls.map.setValue(form.controls.map.value.id);
+            form.controls['modset'].setValue(
+                JSON.stringify(form.controls['modset'].value)
+            );
+            form.controls['map'].setValue(
+                JSON.stringify(form.controls['map'].value)
+            );
+            const formData = form.value;
 
-    openNew() {
-        this.selectedMission = {} as Mission;
-        this.selectedMap = {} as Map;
-        this.selectedGameType = {} as GameType;
-        this.selectedSlotsMin = 0;
-        this.selectedSlotsMax = 0;
-        this.selectedStatus = {} as Status;
-        this.selectedModset = {} as Modset;
-        this.selectedDLCs = this.DLCs.filter((value) => value.name === 'None');
-
-        this.selectedMission.missionFiles = [];
-        this.selectedMission.createdBy = this.authService.userValue;
-
-        this.submitted = false;
-        this.newDialog = true;
-    }
-
-    editMission(mission: Mission) {
-        this.selectedMission = { ...mission };
-
-        console.log(this.selectedMission);
-
-        this.selectedMap = mission.map;
-        this.selectedGameType = mission.gameType;
-        this.selectedSlotsMin = mission.slotsMin;
-        this.selectedSlotsMax = mission.slotsMax;
-        this.selectedStatus = mission.status;
-        this.selectedModset = mission.modset;
-        this.selectedDLCs = mission.dlcs;
-        this.newDialog = true;
-    }
-
-    deleteMission(mission: Mission) {
-        this.deleteDialog = true;
-        this.selectedMission = { ...mission };
-    }
-
-    /*
-    saveMission() {
-        this.submitted = true;
-        console.log(this.selectedMission);
-
-        this.selectedMission.map = this.selectedMap;
-        this.selectedMission.modset = this.selectedModset;
-        this.selectedMission.slotsMin = this.selectedSlotsMin;
-        this.selectedMission.slotsMax = this.selectedSlotsMax;
-        this.selectedMission.dlcs = this.selectedDLCs;
-        // @ts-ignore
-        this.selectedMission.gameType = this.gameTypes.find(
-            (value) => value.id === this.selectedGameType.id
-        );
-        // @ts-ignore
-        this.selectedMission.status = this.statuses.find(
-            (value) => value.id === this.selectedStatus.id
-        );
-
-        if (this.selectedMission.name?.trim()) {
-            if (this.selectedMission.id) {
-                const requested = this.selectedMission;
-
-                this.service
-                    .update(this.selectedMission.id, requested)
-                    .subscribe((data) => {
-                        this.missions[
-                            this.findIndexById(this.selectedMission.id)
-                        ] = this.selectedMission;
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: 'Mission updated',
-                            life: 3000,
-                        });
-
-                        this.missions = [...this.missions];
-                        this.newDialog = false;
-                        this.selectedMission = {} as Mission;
-                    });
+            if (form.value.id) {
+                this.update(formData);
             } else {
-                this.service.create(this.selectedMission).subscribe((data) => {
-                    this.missions.push(data);
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: 'Mission created',
-                        life: 3000,
-                    });
-
-                    this.missions = [...this.missions];
-                    this.newDialog = false;
-                    this.selectedMission = {} as Mission;
-                });
+                this.create(formData);
             }
-        }
-    }
-*/
-
-    findIndexById(id: number): number {
-        let index = -1;
-        for (let i = 0; i < this.missions.length; i++) {
-            if (this.missions[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
-
-    hideDialog() {
-        this.newDialog = false;
-        this.submitted = false;
-    }
-
-    confirmDelete() {
-        this.deleteDialog = false;
-
-        if (this.selectedMission.id) {
-            this.service.delete(this.selectedMission.id).subscribe((data) => {
-                this.missions = this.missions.filter(
-                    (value) => value.id !== this.selectedMission.id
-                );
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: 'Mission deleted',
-                    life: 3000,
-                });
-            });
         } else {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: "Couldn't remove Mission",
-                life: 3000,
-            });
-
-            this.selectedMission = {} as Mission;
+            this.showToastMessage(MessageType.WARNING, 'Invalid input data');
         }
     }
 

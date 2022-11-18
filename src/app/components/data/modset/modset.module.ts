@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModsetComponent } from './modset.component';
 import { ModsetRoutingModule } from './modset-routing.module';
 import { TableModule } from 'primeng/table';
@@ -38,6 +38,7 @@ import { ModsetManagerComponent } from './manager/modset-manager.component';
         ChipModule,
         ToolbarModule,
         DialogModule,
+        ReactiveFormsModule,
     ],
     declarations: [ModsetComponent, ModsetManagerComponent],
 })

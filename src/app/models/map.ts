@@ -1,5 +1,6 @@
 import { AbstractData } from './abstract-data';
 
-export interface Status extends AbstractData {
+export interface Map extends AbstractData {
     name: string;
+    worldName: string;
 }

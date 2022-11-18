@@ -5,61 +5,104 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
-                        <button pButton pRipple label="Back" icon="pi pi-arrow-left" class="p-button-info mr-2"
-                                (click)="goBack()"></button>
-                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-                                (click)="openNew()"></button>
+                        <button
+                            pButton
+                            pRipple
+                            label="Back"
+                            icon="pi pi-arrow-left"
+                            class="p-button-info mr-2"
+                            (click)="goBack('maps')"
+                        ></button>
+                        <button
+                            pButton
+                            pRipple
+                            label="New"
+                            icon="pi pi-plus"
+                            class="p-button-success mr-2"
+                            (click)="handleCreate()"
+                        ></button>
                     </div>
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="maps" [columns]="cols" responsiveLayout="scroll" [loading]="loading"
-                     [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
-                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+            <p-table
+                #dt
+                [value]="data"
+                [columns]="cols"
+                responsiveLayout="scroll"
+                [loading]="isLoading"
+                [globalFilterFields]="['name']"
+                [rows]="20"
+                [paginator]="true"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowHover]="true"
+                dataKey="id"
+            >
                 <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                    <div
+                        class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    >
                         <h5 class="m-0">Manage maps</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
-                                   class="w-full sm:w-auto"/>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="onGlobalFilter(dt, $event)"
+                                placeholder="Search..."
+                                class="w-full sm:w-auto"
+                            />
                         </span>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="code">ID
-                            <p-sortIcon field="code"></p-sortIcon>
+                        <th pSortableColumn="id">
+                            ID
+                            <p-sortIcon field="id"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="name">Name
+                        <th pSortableColumn="name">
+                            Name
                             <p-sortIcon field="name"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="name">World name
-                            <p-sortIcon field="name"></p-sortIcon>
+                        <th pSortableColumn="worldName">
+                            World name
+                            <p-sortIcon field="worldName"></p-sortIcon>
                         </th>
                         <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-map>
                     <tr>
-                        <td style="width: 2.5%; min-width: 6rem;"><span class="p-column-title">ID</span>
-                            {{map.id}}
+                        <td style="width: 2.5%; min-width: 6rem">
+                            <span class="p-column-title">ID</span>
+                            {{ map.id }}
                         </td>
-                        <td style="width: 50%; min-width: 12rem;">
+                        <td style="width: 50%; min-width: 12rem">
                             <span class="p-column-title">Name</span>
-                            {{map.name}}
+                            {{ map.name }}
                         </td>
-                        <td style="width: 47.5%; min-width: 12rem;">
+                        <td style="width: 47.5%; min-width: 12rem">
                             <span class="p-column-title">World name</span>
-                            {{map.name}}
+                            {{ map.worldName }}
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil"
-                                        class="p-button-rounded p-button-warning mr-2"
-                                        (click)="editMap(map)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                        (click)="deleteMap(map)"></button>
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-warning mr-2"
+                                    (click)="handleEdit(map)"
+                                ></button>
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-danger"
+                                    (click)="handleDelete(map)"
+                                ></button>
                             </div>
                         </td>
                     </tr>
@@ -67,39 +110,98 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="newDialog" [style]="{width: '450px'}" header="Map" [modal]="true"
-                  class="p-fluid">
+        <p-dialog
+            [(visible)]="newDialog"
+            [style]="{ width: '600px' }"
+            header="Map"
+            [modal]="true"
+            class="p-fluid"
+        >
             <ng-template pTemplate="content">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="currentMap!.name" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMap.name}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMap.name">Name is required.</small>
-                </div>
-                <div class="field">
-                    <label for="world-name">World name</label>
-                    <input type="text" pInputText id="world-name" [(ngModel)]="currentMap!.name" required autofocus
-                           [ngClass]="{'ng-invalid ng-dirty' : submitted && !currentMap.name}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !currentMap.name">World name is required.</small>
-                </div>
+                <form
+                    id="dlcForm"
+                    enctype="multipart/form-data"
+                    [formGroup]="form"
+                    (ngSubmit)="handleSave()"
+                >
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input
+                            id="name"
+                            type="text"
+                            formControlName="name"
+                            pInputText
+                            autofocus
+                            [required]="true"
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="worldName">World name</label>
+                        <input
+                            id="worldName"
+                            type="text"
+                            formControlName="worldName"
+                            pInputText
+                            [required]="true"
+                        />
+                    </div>
+                </form>
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                        (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-                        (click)="saveMap()"></button>
+                <button
+                    pButton
+                    pRipple
+                    label="Cancel"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    (click)="closeNewDialog()"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    label="Save"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    (click)="handleSave()"
+                ></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog
+            [(visible)]="deleteDialog"
+            header="Confirm"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
             <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="currentMap">Are you sure you want to delete <b>{{currentMap.name}}</b>?</span>
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span *ngIf="selectedValue"
+                    >Are you sure you want to delete
+                    <b>{{ selectedValue.name }}</b
+                    >?</span
+                >
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="No"
+                    (click)="deleteDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Yes"
+                    (click)="confirmDelete()"
+                ></button>
             </ng-template>
         </p-dialog>
     </div>

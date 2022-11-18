@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StatusComponent } from './status.component';
 import { StatusRoutingModule } from './status-routing.module';
 import { TableModule } from 'primeng/table';
@@ -38,6 +38,7 @@ import { StatusManagerComponent } from './manager/status-manager.component';
         ChipModule,
         ToolbarModule,
         DialogModule,
+        ReactiveFormsModule,
     ],
     declarations: [StatusComponent, StatusManagerComponent],
 })

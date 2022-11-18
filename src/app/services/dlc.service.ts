@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CRUDService } from './crud.service';
-import { DLC } from '../models/DLC';
+import { DLC } from '../models/dlc';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
