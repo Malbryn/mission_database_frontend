@@ -17,6 +17,8 @@ import { AuthService } from '../../../../services/auth.service';
 import { AbstractManagerComponent } from '../../common/abstract-manager.component';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MessageType } from '../../../../models/message-type';
+import { MissionDto } from '../../../../models/mission.dto';
+import { AbstractData } from '../../../../models/abstract-data';
 
 @Component({
     templateUrl: './mission-manager.component.html',
@@ -108,32 +110,36 @@ export class MissionManagerComponent
     }
 
     override handleEdit(mission: Mission) {
-        this.form.setValue({ ...mission });
-
-        this.form.controls['gameType'].patchValue(mission.gameType.id);
-        this.form.controls['status'].patchValue(mission.status.id);
+        this.form.setValue({
+            ...mission,
+            gameType: mission.gameType.id,
+            status: mission.status.id,
+        });
 
         this.openNewDialog();
     }
 
     override handleSave() {
         if (this.form.valid) {
-            // this.closeNewDialog();
+            this.closeNewDialog();
             this.setLoadingState(true);
 
             const form = this.form;
-            // form.controls.map.setValue(form.controls.map.value.id);
-            // form.controls.map.setValue(form.controls.map.value.id);
-            form.controls['modset'].setValue(
-                JSON.stringify(form.controls['modset'].value)
-            );
-            form.controls['map'].setValue(
-                JSON.stringify(form.controls['map'].value)
-            );
             const formData = form.value;
 
+            formData.gameType = this.findRelatedDataById(
+                this.gameTypes,
+                formData.gameType
+            );
+            formData.status = this.findRelatedDataById(
+                this.statuses,
+                formData.status
+            );
+
+            const dto = this.convertToDto(formData);
+
             if (form.value.id) {
-                this.update(formData);
+                this.update(dto);
             } else {
                 this.create(formData);
             }
@@ -166,5 +172,36 @@ export class MissionManagerComponent
         }
 
         this.filteredModsets = filtered;
+    }
+
+    private convertToDto(mission: Mission): MissionDto {
+        return {
+            id: mission.id,
+            name: mission.name,
+            mapId: mission.map.id,
+            author: mission.author,
+            gameTypeId: mission.gameType.id,
+            slotsMin: mission.slotsMin,
+            slotsMax: mission.slotsMax,
+            createdById: mission.createdBy.id,
+            statusId: mission.status.id,
+            modsetId: mission.modset.id,
+            dlcs: mission.dlcs.map((element: DLC) => element.id),
+            description: mission.description,
+        } as MissionDto;
+    }
+
+    private findRelatedDataById(
+        collection: AbstractData[],
+        id: number
+    ): AbstractData | undefined {
+        const data = collection.find((value) => value.id === id);
+
+        if (!data)
+            this.handleError(
+                `Data with ID ${id} is not found in collection: ${collection}`
+            );
+
+        return data;
     }
 }

@@ -8,7 +8,6 @@ import { MissionFile } from './mission-file';
 import { AbstractData } from './abstract-data';
 
 export interface Mission extends AbstractData {
-    id: number;
     name: string;
     map: Map;
     author: string;

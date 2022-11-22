@@ -211,8 +211,7 @@
         >
             <ng-template pTemplate="content">
                 <form
-                    id="dlcForm"
-                    enctype="multipart/form-data"
+                    id="missionForm"
                     [formGroup]="form"
                     (ngSubmit)="handleSave()"
                 >
@@ -315,6 +314,7 @@
                                         class="field-radiobutton"
                                     >
                                         <p-radioButton
+                                            name="gameType"
                                             formControlName="gameType"
                                             [label]="gameTypeOption.name"
                                             [value]="gameTypeOption.id"
@@ -348,9 +348,17 @@
                                         <p-radioButton
                                             name="status"
                                             formControlName="status"
-                                            [label]="status.name"
                                             [value]="status.id"
-                                        ></p-radioButton>
+                                        >
+                                        </p-radioButton>
+                                        <label
+                                            [for]="status"
+                                            [class]="
+                                                'status-badge status-' +
+                                                status.name.toLowerCase()
+                                            "
+                                            >{{ status.name }}</label
+                                        >
                                     </div>
                                 </div>
                             </div>

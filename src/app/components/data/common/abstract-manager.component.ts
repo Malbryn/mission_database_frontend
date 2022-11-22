@@ -7,6 +7,7 @@ import { Table } from 'primeng/table';
 import { MessageType } from '../../../models/message-type';
 import { CRUDService } from '../../../services/crud.service';
 import { AbstractData } from '../../../models/abstract-data';
+import { MissionDto } from '../../../models/mission.dto';
 
 @Component({
     template: '',
@@ -189,7 +190,7 @@ export abstract class AbstractManagerComponent<T extends AbstractData>
         });
     }
 
-    protected update(formData: T): void {
+    protected update(formData: T | MissionDto): void {
         this.service.update(formData.id, formData).subscribe({
             next: (value: T) => {
                 const index = this.findIndexById(formData.id, this.data);
