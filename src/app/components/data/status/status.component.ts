@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Status } from '../../../models/Status';
+import { Status } from '../../../models/status';
 import { StatusService } from '../../../services/status.service';
 import { Router } from '@angular/router';
 import { AbstractDataComponent } from '../common/abstract-data.component';

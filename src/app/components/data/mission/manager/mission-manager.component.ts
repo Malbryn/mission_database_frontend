@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { MapService } from '../../../../services/map.service';
 import { GameType } from '../../../../models/game-type';
 import { GameTypeService } from '../../../../services/game-type.service';
-import { Status } from '../../../../models/Status';
+import { Status } from '../../../../models/status';
 import { StatusService } from '../../../../services/status.service';
 import { DLC } from '../../../../models/dlc';
 import { DLCService } from '../../../../services/dlc.service';

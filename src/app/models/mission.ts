@@ -1,7 +1,7 @@
 import { Map } from './map';
 import { GameType } from './game-type';
 import { User } from './user';
-import { Status } from './Status';
+import { Status } from './status';
 import { Modset } from './modset';
 import { DLC } from './dlc';
 import { MissionFile } from './mission-file';
