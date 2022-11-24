@@ -43,8 +43,15 @@ export class LoginComponent implements OnInit {
         private authService: AuthService,
         private messageService: MessageService
     ) {
-        if (this.authService.currentUser.value) {
-            this.router.navigate(['/']);
+        if (
+            this.authService.currentUser.value.accessToken &&
+            !this.authService.currentUser.value.id
+        ) {
+            this.authService.refreshUser().subscribe({
+                next: () => {
+                    this.router.navigate(['/']);
+                },
+            });
         }
     }
 

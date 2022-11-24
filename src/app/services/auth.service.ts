@@ -49,6 +49,15 @@ export class AuthService {
         this.router.navigate(['/auth/login']);
     }
 
+    refreshUser(): Observable<void> {
+        return this.http.get<User>(`${environment.API_URL}/users/me`).pipe(
+            map((user: User) => {
+                user.accessToken = this.getAccessTokenFromStorage();
+                this.currentUser.next(user);
+            })
+        );
+    }
+
     private getAccessTokenFromStorage(): string | null {
         let token = localStorage.getItem(AuthService.STORAGE_KEY);
 

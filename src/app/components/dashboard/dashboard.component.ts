@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -8,7 +10,13 @@ import { MenuItem } from 'primeng/api';
 export class DashboardComponent implements OnInit {
     menuItems: MenuItem[] = [];
 
+    constructor(private authService: AuthService, private router: Router) {}
+
     ngOnInit() {
+        if (!this.authService.currentUser.value.id) {
+            this.router.navigate(['/auth/login']);
+        }
+
         this.menuItems = [
             {
                 label: 'Components',

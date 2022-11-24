@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { NotFoundComponent } from './components/notfound/notfound.component';
 import { AppLayoutComponent } from './components/layout/app.layout.component';
 import { AccessComponent } from './components/auth/access/access.component';
-import { Role } from './models/role';
+import { UserRole } from './models/user-role';
 import { AuthGuard } from './helpers/auth.guard';
 
 @NgModule({
@@ -17,8 +17,6 @@ import { AuthGuard } from './helpers/auth.guard';
                         import('./components/dashboard/dashboard.module').then(
                             (module) => module.DashboardModule
                         ),
-                    canActivate: [AuthGuard],
-                    data: { roles: [Role.MEMBER] },
                 },
                 {
                     path: 'data',
@@ -28,7 +26,7 @@ import { AuthGuard } from './helpers/auth.guard';
                             (module) => module.DataModule
                         ),
                     canActivate: [AuthGuard],
-                    data: { roles: [Role.MEMBER] },
+                    data: { role: UserRole.MEMBER },
                 },
                 {
                     path: 'auth',

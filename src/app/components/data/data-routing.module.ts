@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthGuard } from '../../helpers/auth.guard';
+import { UserRole } from '../../models/user-role';
 
 @NgModule({
     imports: [
@@ -10,6 +12,8 @@ import { RouterModule } from '@angular/router';
                     import('./dlc/dlc.module').then(
                         (module) => module.DLCModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
             },
             {
                 path: 'game-types',
@@ -17,6 +21,8 @@ import { RouterModule } from '@angular/router';
                     import('./game-type/game-type.module').then(
                         (module) => module.GameTypeModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
             },
             {
                 path: 'maps',
@@ -24,6 +30,8 @@ import { RouterModule } from '@angular/router';
                     import('./map/map.module').then(
                         (module) => module.MapModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
             },
             {
                 path: 'missions',
@@ -31,6 +39,8 @@ import { RouterModule } from '@angular/router';
                     import('./mission/mission.module').then(
                         (module) => module.MissionModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.MEMBER },
             },
             {
                 path: 'mission-files',
@@ -38,6 +48,8 @@ import { RouterModule } from '@angular/router';
                     import('./mission-file/mission-file.module').then(
                         (module) => module.MissionFileModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
             },
             {
                 path: 'modsets',
@@ -45,6 +57,8 @@ import { RouterModule } from '@angular/router';
                     import('./modset/modset.module').then(
                         (module) => module.ModsetModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
             },
             {
                 path: 'statuses',
@@ -52,6 +66,8 @@ import { RouterModule } from '@angular/router';
                     import('./status/status.module').then(
                         (module) => module.StatusModule
                     ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
             },
             { path: '**', redirectTo: '/' },
         ]),
