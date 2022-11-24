@@ -4,6 +4,8 @@ import { MissionFile } from '../../../models/mission-file';
 import { MissionFileService } from '../../../services/mission-file.service';
 import { Router } from '@angular/router';
 import { AbstractDataComponent } from '../common/abstract-data.component';
+import { AuthGuard } from '../../../helpers/auth.guard';
+import { UserRole } from '../../../models/user-role';
 
 @Component({
     templateUrl: './mission-file.component.html',
@@ -14,10 +16,20 @@ export class MissionFileComponent
     extends AbstractDataComponent
     implements OnInit
 {
+    static readonly MANAGE_PERMISSION_LEVEL = UserRole.ADMIN;
+
     missionFiles: MissionFile[] = [];
 
-    constructor(private service: MissionFileService, private router: Router) {
-        super();
+    constructor(
+        private service: MissionFileService,
+        private router: Router,
+        authGuard: AuthGuard
+    ) {
+        super(authGuard);
+
+        this.canManage = this.hasPermission(
+            MissionFileComponent.MANAGE_PERMISSION_LEVEL
+        );
     }
 
     override manage(): void {
@@ -27,7 +39,7 @@ export class MissionFileComponent
     ngOnInit() {
         this.service.getAll().subscribe((data: MissionFile[]) => {
             this.missionFiles = data;
-            this.loading = false;
+            this.isLoading = false;
         });
     }
 }

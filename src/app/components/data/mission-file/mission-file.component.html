@@ -1,7 +1,7 @@
 <div class="grid">
     <div class="col-12">
         <div class="card">
-            <p-toolbar styleClass="mb-4">
+            <p-toolbar *ngIf="canManage" styleClass="mb-4">
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="Manage" icon="pi pi-pencil"
@@ -11,7 +11,7 @@
             </p-toolbar>
 
             <h5>Filter Menu</h5>
-            <p-table #dt1 [value]="missionFiles" dataKey="id" [rows]="20" [loading]="loading" [rowHover]="true"
+            <p-table #dt1 [value]="missionFiles" dataKey="id" [rows]="20" [loading]="isLoading" [rowHover]="true"
                      [paginator]="true" [showCurrentPageReport]="true" [globalFilterFields]="['name']"
                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                      responsiveLayout="scroll"

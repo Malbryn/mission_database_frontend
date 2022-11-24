@@ -1,5 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
+import { UserRole } from '../../../models/user-role';
+import { AuthGuard } from '../../../helpers/auth.guard';
 
 @Component({
     template: ``,
@@ -7,9 +9,16 @@ import { Table } from 'primeng/table';
 export abstract class AbstractDataComponent {
     @ViewChild('filter') filter!: ElementRef;
 
-    loading: boolean = true;
+    isLoading: boolean = true;
+    canManage: boolean = false;
+
+    protected constructor(private authGuard: AuthGuard) {}
 
     abstract manage(): void;
+
+    protected hasPermission(requiredRole: UserRole): boolean {
+        return this.authGuard.hasPermission(requiredRole);
+    }
 
     onGlobalFilter(table: Table, event: Event): void {
         table.filterGlobal(

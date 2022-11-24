@@ -4,6 +4,8 @@ import { DLC } from '../../../models/dlc';
 import { Router } from '@angular/router';
 import { DLCService } from '../../../services/dlc.service';
 import { AbstractDataComponent } from '../common/abstract-data.component';
+import { UserRole } from '../../../models/user-role';
+import { AuthGuard } from '../../../helpers/auth.guard';
 
 @Component({
     templateUrl: './dlc.component.html',
@@ -11,10 +13,20 @@ import { AbstractDataComponent } from '../common/abstract-data.component';
     providers: [MessageService, ConfirmationService],
 })
 export class DLCComponent extends AbstractDataComponent implements OnInit {
+    static readonly MANAGE_PERMISSION_LEVEL = UserRole.ADMIN;
+
     DLCs: DLC[] = [];
 
-    constructor(private service: DLCService, private router: Router) {
-        super();
+    constructor(
+        private service: DLCService,
+        private router: Router,
+        authGuard: AuthGuard
+    ) {
+        super(authGuard);
+
+        this.canManage = this.hasPermission(
+            DLCComponent.MANAGE_PERMISSION_LEVEL
+        );
     }
 
     override manage(): void {
@@ -24,7 +36,7 @@ export class DLCComponent extends AbstractDataComponent implements OnInit {
     ngOnInit() {
         this.service.getAll().subscribe((data: DLC[]) => {
             this.DLCs = data;
-            this.loading = false;
+            this.isLoading = false;
         });
     }
 }

@@ -34,6 +34,15 @@ export class AuthGuard implements CanActivate {
         return false;
     }
 
+    hasPermission(requiredRole: UserRole): boolean {
+        const currentUser = this.authService.currentUser.value;
+        const userRole = this.getUserRole(currentUser);
+
+        if (currentUser.accessToken && userRole !== UserRole.UNKNOWN) {
+            return requiredRole <= userRole;
+        } else return false;
+    }
+
     private getUserRole(user: User): UserRole {
         if (user['isAdmin']) return UserRole.ADMIN;
         if (user['isStaff']) return UserRole.STAFF;
