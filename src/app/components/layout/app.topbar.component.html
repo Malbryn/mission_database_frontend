@@ -9,7 +9,7 @@
     </a>
 
     <div class="layout-topbar-menu flex align-items-center">
-        <p class="m-0">Logged in as <strong>{{ authService.userValue?.username }}</strong></p>
+        <p class="m-0">Logged in as <strong>{{ authService.currentUser.value?.username ?? '' }}</strong></p>
 
         <button pButton pRipple type="button" label="Log Out" class="p-button-outlined p-button-danger p-2 ml-3 mr-2"
                 (click)="authService.logOut()">

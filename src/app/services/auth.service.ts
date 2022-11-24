@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { User } from '../models/user';
 import { environment } from '../../environments/environment';
 
@@ -10,33 +9,30 @@ import { environment } from '../../environments/environment';
     providedIn: 'root',
 })
 export class AuthService {
-    user: Observable<User>;
-    private userSubject: BehaviorSubject<User>;
+    static readonly LOCAL_STORAGE_KEY = 'accessToken';
+
+    currentUser: BehaviorSubject<User>;
 
     constructor(private router: Router, private http: HttpClient) {
-        const userString = this.getUserFromLocalStorage();
+        const user = {} as User;
+        user.accessToken = this.getAccessTokenFromLocalStorage();
 
-        this.userSubject = new BehaviorSubject<User>(
-            userString !== '' ? JSON.parse(userString) : null
-        );
-
-        this.user = this.userSubject.asObservable();
+        this.currentUser = new BehaviorSubject<User>(user);
     }
 
-    get userValue(): User {
-        return this.userSubject.value;
-    }
-
-    logIn(username: string, password: string) {
+    logIn(username: string, password: string): Observable<User> {
         return this.http
-            .post<any>(`${environment.API_URL}/auth/login/`, {
+            .post<User>(`${environment.API_URL}/auth/login/`, {
                 username,
                 password,
             })
             .pipe(
-                map((user) => {
-                    localStorage.setItem('user', JSON.stringify(user));
-                    this.userSubject.next(user);
+                map((user: User) => {
+                    if (!user.accessToken)
+                        throw new Error('User access token is empty.');
+
+                    this.saveAccessToken(user.accessToken);
+                    this.currentUser.next(user);
 
                     return user;
                 })
@@ -44,14 +40,38 @@ export class AuthService {
     }
 
     logOut(): void {
-        localStorage.removeItem('user');
-        this.userSubject.next(null as any);
+        this.deleteAccessToken();
+        this.currentUser.next({} as User);
         this.router.navigate(['/auth/login']);
     }
 
-    private getUserFromLocalStorage(): string {
-        const user = localStorage.getItem('user');
+    /*getCurrentUser(): void {
+        if (!this.accessToken) {
+            this.currentUser.next(null);
+            return;
+        }
 
-        return user ?? '';
+        this.http.get<User>(`${environment.API_URL}/users/me`).subscribe({
+            next: (user: User) => {
+                if (this.accessToken !== null) {
+                    user.accessToken = this.accessToken;
+                }
+
+                this.currentUser.next(user);
+            },
+            error: (error) => console.error('Cannot get current user: ', error),
+        });
+    }*/
+
+    private getAccessTokenFromLocalStorage(): string | null {
+        return localStorage.getItem(AuthService.LOCAL_STORAGE_KEY);
+    }
+
+    private saveAccessToken(token: string): void {
+        localStorage.setItem(AuthService.LOCAL_STORAGE_KEY, token);
+    }
+
+    private deleteAccessToken(): void {
+        localStorage.removeItem(AuthService.LOCAL_STORAGE_KEY);
     }
 }

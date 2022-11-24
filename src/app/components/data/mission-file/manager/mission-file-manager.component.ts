@@ -94,9 +94,9 @@ export class MissionFileManagerComponent
                 this.update(formData);
             } else {
                 // TODO: TESTING ONLY
-                form.controls['createdBy'].setValue(
-                    this.authService.userValue.id
-                );
+                /*form.controls['createdBy'].setValue(
+                    this.authService.currentUser.value.id
+                );*/
                 formData = form.value;
                 formData.set('missionId', '1');
                 formData.set('createdById', '1');

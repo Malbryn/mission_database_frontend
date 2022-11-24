@@ -14,7 +14,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.primengConfig.ripple = true;
-
         this.layoutService.config = {
             ripple: false,
             inputStyle: 'filled',

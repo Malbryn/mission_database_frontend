@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
         private authService: AuthService,
         private messageService: MessageService
     ) {
-        if (this.authService.userValue) {
+        if (this.authService.currentUser.value) {
             this.router.navigate(['/']);
         }
     }
@@ -82,6 +82,8 @@ export class LoginComponent implements OnInit {
                     this.showErrorViaToast();
                 },
             });
+
+        this.router.navigate(['/']);
     }
 
     showErrorViaToast() {
