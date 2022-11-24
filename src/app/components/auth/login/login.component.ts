@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required],
+            rememberUser: [true],
         });
     }
 
@@ -69,7 +70,8 @@ export class LoginComponent implements OnInit {
         this.authService
             .logIn(
                 this.formControls['username'].value,
-                this.formControls['password'].value
+                this.formControls['password'].value,
+                this.formControls['rememberUser'].value
             )
             .pipe(first())
             .subscribe({

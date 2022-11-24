@@ -9,18 +9,22 @@ import { environment } from '../../environments/environment';
     providedIn: 'root',
 })
 export class AuthService {
-    static readonly LOCAL_STORAGE_KEY = 'accessToken';
+    static readonly STORAGE_KEY = 'accessToken';
 
     currentUser: BehaviorSubject<User>;
 
     constructor(private router: Router, private http: HttpClient) {
         const user = {} as User;
-        user.accessToken = this.getAccessTokenFromLocalStorage();
+        user.accessToken = this.getAccessTokenFromStorage();
 
         this.currentUser = new BehaviorSubject<User>(user);
     }
 
-    logIn(username: string, password: string): Observable<User> {
+    logIn(
+        username: string,
+        password: string,
+        rememberUser: boolean
+    ): Observable<User> {
         return this.http
             .post<User>(`${environment.API_URL}/auth/login/`, {
                 username,
@@ -31,7 +35,7 @@ export class AuthService {
                     if (!user.accessToken)
                         throw new Error('User access token is empty.');
 
-                    this.saveAccessToken(user.accessToken);
+                    this.saveAccessToken(user.accessToken, rememberUser);
                     this.currentUser.next(user);
 
                     return user;
@@ -45,33 +49,26 @@ export class AuthService {
         this.router.navigate(['/auth/login']);
     }
 
-    /*getCurrentUser(): void {
-        if (!this.accessToken) {
-            this.currentUser.next(null);
-            return;
+    private getAccessTokenFromStorage(): string | null {
+        let token = localStorage.getItem(AuthService.STORAGE_KEY);
+
+        if (!token) {
+            token = sessionStorage.getItem(AuthService.STORAGE_KEY);
         }
 
-        this.http.get<User>(`${environment.API_URL}/users/me`).subscribe({
-            next: (user: User) => {
-                if (this.accessToken !== null) {
-                    user.accessToken = this.accessToken;
-                }
-
-                this.currentUser.next(user);
-            },
-            error: (error) => console.error('Cannot get current user: ', error),
-        });
-    }*/
-
-    private getAccessTokenFromLocalStorage(): string | null {
-        return localStorage.getItem(AuthService.LOCAL_STORAGE_KEY);
+        return token;
     }
 
-    private saveAccessToken(token: string): void {
-        localStorage.setItem(AuthService.LOCAL_STORAGE_KEY, token);
+    private saveAccessToken(token: string, isPersistent: boolean): void {
+        if (isPersistent) {
+            localStorage.setItem(AuthService.STORAGE_KEY, token);
+        } else {
+            sessionStorage.setItem(AuthService.STORAGE_KEY, token);
+        }
     }
 
     private deleteAccessToken(): void {
-        localStorage.removeItem(AuthService.LOCAL_STORAGE_KEY);
+        localStorage.removeItem(AuthService.STORAGE_KEY);
+        sessionStorage.removeItem(AuthService.STORAGE_KEY);
     }
 }
