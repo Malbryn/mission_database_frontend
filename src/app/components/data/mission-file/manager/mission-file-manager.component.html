@@ -105,6 +105,10 @@
                                        [min]="0" [max]="999">
                         </p-inputNumber>
                     </div>
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input id="name" type="text" formControlName="name" pInputText [required]="true"/>
+                    </div>
                     <!-- Temporarily disabled -->
                     <div *ngIf="false" class="field">
                         <label for="path">Path</label>

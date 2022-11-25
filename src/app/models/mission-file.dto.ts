@@ -1,15 +1,13 @@
 import { AbstractData } from './abstract-data';
-import { Mission } from './mission';
-import { User } from './user';
 
-export interface MissionFile extends AbstractData {
-    mission: Mission;
+export interface MissionFileDto extends AbstractData {
+    missionId: number;
     name: string;
     version: number;
     path: string;
     downloadUrl: string;
     description: string;
-    createdBy: User;
+    createdById: number;
     createdAt: string;
     file: File;
 }

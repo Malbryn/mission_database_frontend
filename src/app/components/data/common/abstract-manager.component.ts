@@ -8,6 +8,7 @@ import { MessageType } from '../../../models/message-type';
 import { CRUDService } from '../../../services/crud.service';
 import { AbstractData } from '../../../models/abstract-data';
 import { MissionDto } from '../../../models/mission.dto';
+import { MissionFileDto } from '../../../models/mission-file.dto';
 
 @Component({
     template: '',
@@ -175,7 +176,7 @@ export abstract class AbstractManagerComponent<T extends AbstractData>
         });
     }
 
-    protected create(formData: T): void {
+    protected create(formData: T | MissionDto | FormData): void {
         this.service.create(formData).subscribe({
             next: (value: T) => {
                 this.data.push(value);
@@ -190,7 +191,7 @@ export abstract class AbstractManagerComponent<T extends AbstractData>
         });
     }
 
-    protected update(formData: T | MissionDto): void {
+    protected update(formData: T | MissionDto | MissionFileDto): void {
         this.service.update(formData.id, formData).subscribe({
             next: (value: T) => {
                 const index = this.findIndexById(formData.id, this.data);

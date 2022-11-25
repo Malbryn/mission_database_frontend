@@ -11,6 +11,7 @@ import { AbstractManagerComponent } from '../../common/abstract-manager.componen
 import { saveAs } from 'file-saver';
 import { environment } from '../../../../../environments/environment';
 import { MessageType } from '../../../../models/message-type';
+import { MissionFileDto } from '../../../../models/mission-file.dto';
 
 @Component({
     templateUrl: './mission-file-manager.component.html',
@@ -70,8 +71,11 @@ export class MissionFileManagerComponent
     }
 
     override handleEdit(data: MissionFile) {
-        this.form.setValue({ ...data });
-        this.selectedMission = this.findMissionByID(data.mission);
+        this.form.setValue({
+            ...data,
+            file: {} as File,
+        });
+        this.selectedMission = this.findMissionByID(data.mission.id);
         this.form.controls['mission'].patchValue(this.selectedMission);
 
         this.openNewDialog();
@@ -83,25 +87,24 @@ export class MissionFileManagerComponent
             this.setLoadingState(true);
 
             const form = this.form;
-            form.controls['mission'].setValue(
-                form.controls['mission'].value.id
-            );
-            let formData = form.value;
+            const formData = form.value;
+
+            const dto = this.convertToDto(formData);
 
             if (form.value.id) {
-                formData.delete('file');
-
-                this.update(formData);
+                this.update(dto);
             } else {
-                // TODO: TESTING ONLY
-                /*form.controls['createdBy'].setValue(
-                    this.authService.currentUser.value.id
-                );*/
-                formData = form.value;
-                formData.set('missionId', '1');
-                formData.set('createdById', '1');
+                const userId = this.authService.currentUser.value.id;
 
-                this.create(formData);
+                const newFormData = new FormData();
+                newFormData.append('missionId', formData.mission.id);
+                newFormData.append('name', formData.name);
+                newFormData.append('version', formData.version);
+                newFormData.append('description', formData.description);
+                newFormData.append('createdById', userId.toString());
+                newFormData.append('file', formData.file);
+
+                this.create(newFormData);
             }
         } else {
             this.showToastMessage(MessageType.WARNING, 'Invalid input data');
@@ -142,5 +145,21 @@ export class MissionFileManagerComponent
     private findMissionByID(id: number): Mission {
         const mission = this.missions.find((element) => element.id === id);
         return mission === undefined ? ({} as Mission) : mission;
+    }
+
+    private convertToDto(missionFile: MissionFile): MissionFileDto {
+        const userId = this.authService.currentUser.value.id;
+
+        return {
+            id: missionFile.id,
+            missionId: missionFile.mission.id,
+            name: missionFile.name,
+            version: missionFile.version,
+            path: missionFile.path,
+            downloadUrl: missionFile.downloadUrl,
+            description: missionFile.description,
+            createdById: userId,
+            file: missionFile.file,
+        } as MissionFileDto;
     }
 }

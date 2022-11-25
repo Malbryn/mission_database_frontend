@@ -297,9 +297,10 @@
                                         *ngFor="let dlc of DLCs"
                                         class="field-checkbox pr-4"
                                     >
+                                        <!-- FormControl workaround (https://github.com/primefaces/primeng/issues/2906) -->
                                         <p-checkbox
                                             name="dlcGroup"
-                                            formControlName="dlcs"
+                                            [formControl]="$any(form.controls['dlcs'])"
                                             [label]="dlc.name"
                                             [value]="dlc"
                                         ></p-checkbox>

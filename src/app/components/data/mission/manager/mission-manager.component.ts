@@ -141,7 +141,7 @@ export class MissionManagerComponent
             if (form.value.id) {
                 this.update(dto);
             } else {
-                this.create(formData);
+                this.create(dto);
             }
         } else {
             this.showToastMessage(MessageType.WARNING, 'Invalid input data');
@@ -175,6 +175,8 @@ export class MissionManagerComponent
     }
 
     private convertToDto(mission: Mission): MissionDto {
+        const userId = this.authService.currentUser.value.id;
+
         return {
             id: mission.id,
             name: mission.name,
@@ -183,7 +185,7 @@ export class MissionManagerComponent
             gameTypeId: mission.gameType.id,
             slotsMin: mission.slotsMin,
             slotsMax: mission.slotsMax,
-            createdById: mission.createdBy.id,
+            createdById: userId,
             statusId: mission.status.id,
             modsetId: mission.modset.id,
             dlcs: mission.dlcs.map((element: DLC) => element.id),
