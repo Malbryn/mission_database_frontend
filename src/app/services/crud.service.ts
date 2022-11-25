@@ -11,26 +11,26 @@ export abstract class CRUDService<T> {
     }
 
     create(value: FormData | Partial<any> | any): Observable<T> {
-        return this.http.post<T>(this.URL, value).pipe();
+        return this.http.post<T>(this.URL, value);
     }
 
     delete(id: number): Observable<T> {
-        return this.http.delete<T>(this.URL + id).pipe();
+        return this.http.delete<T>(this.URL + id);
     }
 
     get(id: number): Observable<T> {
-        return this.http.get<T>(this.URL + id).pipe();
+        return this.http.get<T>(this.URL + id);
     }
 
     getAll(): Observable<T[]> {
-        return this.http.get<T[]>(this.URL).pipe();
+        return this.http.get<T[]>(this.URL);
     }
 
     update(id: number, value: FormData | Partial<any>): Observable<T> {
-        return this.http.patch<T>(this.URL + id + '/', value).pipe();
+        return this.http.patch<T>(this.URL + id + '/', value);
     }
 
     patch(id: number, value: FormData | Partial<any>): Observable<T> {
-        return this.http.patch<T>(this.URL + id + '/', value).pipe();
+        return this.http.patch<T>(this.URL + id + '/', value);
     }
 }

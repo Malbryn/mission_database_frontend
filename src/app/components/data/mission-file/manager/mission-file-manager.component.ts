@@ -8,10 +8,9 @@ import { Mission } from '../../../../models/mission';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { AbstractManagerComponent } from '../../common/abstract-manager.component';
-import { saveAs } from 'file-saver';
-import { environment } from '../../../../../environments/environment';
 import { MessageType } from '../../../../models/message-type';
 import { MissionFileDto } from '../../../../models/mission-file.dto';
+import { saveAs } from 'file-saver';
 
 @Component({
     templateUrl: './mission-file-manager.component.html',
@@ -34,6 +33,7 @@ export class MissionFileManagerComponent
         authService: AuthService,
         messageService: MessageService,
         service: MissionFileService,
+        private missionFileService: MissionFileService,
         private missionService: MissionService
     ) {
         super(router, formBuilder, authService, messageService, service);
@@ -129,17 +129,17 @@ export class MissionFileManagerComponent
         this.form.get('file')?.updateValueAndValidity();
     }
 
-    async downloadMissionFile(url: string, fileName: string): Promise<void> {
-        const response = await fetch(environment.PROXY_SERVER + url, {
-            method: 'GET',
-            headers: new Headers({
-                Authorization: `token ${environment.GITHUB_TOKEN}`,
-                'Content-Type': 'application/octet-stream',
-            }),
+    async downloadMissionFile(id: number, fileName: string): Promise<void> {
+        this.missionFileService.downloadFile(id).subscribe({
+            next: async (response) => {
+                try {
+                    await saveAs(response, `${fileName}.pbo`);
+                } catch (error) {
+                    this.handleError(error);
+                }
+            },
+            error: (error) => this.handleError(error),
         });
-
-        const content = await response.blob();
-        await saveAs(content, `${fileName}.pbo`);
     }
 
     private findMissionByID(id: number): Mission {
