@@ -20,9 +20,10 @@ export class ModsetComponent extends AbstractDataComponent implements OnInit {
     constructor(
         private service: ModsetService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             ModsetComponent.MANAGE_PERMISSION_LEVEL

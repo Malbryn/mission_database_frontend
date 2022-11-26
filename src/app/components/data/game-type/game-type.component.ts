@@ -20,9 +20,10 @@ export class GameTypeComponent extends AbstractDataComponent implements OnInit {
     constructor(
         private service: GameTypeService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             GameTypeComponent.MANAGE_PERMISSION_LEVEL

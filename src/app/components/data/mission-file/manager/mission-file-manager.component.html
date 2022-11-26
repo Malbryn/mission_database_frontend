@@ -15,7 +15,7 @@
 
             <p-table #dt [value]="data" [columns]="cols" responsiveLayout="scroll" [loading]="isLoading"
                      [globalFilterFields]="['name']" [rows]="20" [paginator]="true" [showCurrentPageReport]="true"
-                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id">
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true" dataKey="id" sortField="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Manage mission files</h5>

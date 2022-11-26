@@ -14,7 +14,7 @@
             <p-table #dt1 [value]="missions" dataKey="id" [rows]="20" [loading]="isLoading" [rowHover]="true"
                      [paginator]="true" [showCurrentPageReport]="true" [globalFilterFields]="['name']"
                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                     responsiveLayout="scroll"
+                     responsiveLayout="scroll" sortField="id" sortField="id"
             >
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">
@@ -171,7 +171,7 @@
                                 <div class="surface-section">
                                     <ul class="list-none p-0 m-0">
                                         <li class="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 surface-border flex-wrap">
-                                            <p-table class="w-100" [value]="mission.missionFiles" dataKey="id" responsiveLayout="scroll">
+                                            <p-table class="w-100" [value]="mission.missionFiles" dataKey="id" responsiveLayout="scroll" sortField="id">
                                                 <ng-template pTemplate="header">
                                                     <tr>
                                                         <th>ID</th>
@@ -189,7 +189,7 @@
                                                         <td style="width: 2.5%; min-width: 6rem;">{{missionFile.version}}</td>
                                                         <td style="width: 50%; min-width: 12rem;">{{missionFile.description}}</td>
                                                         <td style="width: 10%; min-width: 12rem;">{{missionFile.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}</td>
-                                                        <td><p-button type="button" icon="pi pi-download" (onClick)="downloadMissionFile(missionFile.downloadUrl)"></p-button></td>
+                                                        <td><p-button type="button" icon="pi pi-download" (onClick)="downloadMissionFile(missionFile.id, missionFile.name)"></p-button></td>
                                                     </tr>
                                                 </ng-template>
                                                 <ng-template pTemplate="emptymessage">

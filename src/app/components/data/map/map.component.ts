@@ -20,9 +20,10 @@ export class MapComponent extends AbstractDataComponent implements OnInit {
     constructor(
         private service: MapService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             MapComponent.MANAGE_PERMISSION_LEVEL

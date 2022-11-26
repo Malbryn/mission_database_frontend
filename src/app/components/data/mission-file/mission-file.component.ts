@@ -23,9 +23,10 @@ export class MissionFileComponent
     constructor(
         private service: MissionFileService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             MissionFileComponent.MANAGE_PERMISSION_LEVEL

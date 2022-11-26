@@ -20,9 +20,10 @@ export class DLCComponent extends AbstractDataComponent implements OnInit {
     constructor(
         private service: DLCService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             DLCComponent.MANAGE_PERMISSION_LEVEL

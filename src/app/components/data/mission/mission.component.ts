@@ -6,6 +6,7 @@ import { AbstractDataComponent } from '../common/abstract-data.component';
 import { AuthGuard } from '../../../helpers/auth.guard';
 import { UserRole } from '../../../models/user-role';
 import { MissionService } from '../../../services/mission.service';
+import { saveAs } from 'file-saver';
 
 @Component({
     templateUrl: './mission.component.html',
@@ -21,9 +22,10 @@ export class MissionComponent extends AbstractDataComponent implements OnInit {
     constructor(
         private service: MissionService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             MissionComponent.MANAGE_PERMISSION_LEVEL
@@ -41,7 +43,16 @@ export class MissionComponent extends AbstractDataComponent implements OnInit {
         });
     }
 
-    downloadMissionFile(url: string): void {
-        window.open(url, '_blank');
+    async downloadMissionFile(id: number, fileName: string): Promise<void> {
+        this.service.downloadMissionFile(id).subscribe({
+            next: async (response) => {
+                try {
+                    await saveAs(response, `${fileName}.pbo`);
+                } catch (error) {
+                    this.handleError(error);
+                }
+            },
+            error: (error) => this.handleError(error),
+        });
     }
 }

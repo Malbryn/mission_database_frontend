@@ -14,7 +14,7 @@
             <p-table #dt1 [value]="statuses" dataKey="id" [rows]="20" [loading]="isLoading" [rowHover]="true"
                      [paginator]="true" [showCurrentPageReport]="true" [globalFilterFields]="['name']"
                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                     responsiveLayout="scroll"
+                     responsiveLayout="scroll" sortField="id"
             >
                 <ng-template pTemplate="caption">
                     <div class="flex justify-content-between flex-column sm:flex-row">

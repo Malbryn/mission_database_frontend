@@ -33,4 +33,15 @@ export abstract class CRUDService<T> {
     patch(id: number, value: FormData | Partial<any>): Observable<T> {
         return this.http.patch<T>(this.URL + id + '/', value);
     }
+
+    downloadMissionFile(id: number): Observable<any> {
+        const url = `${CRUDService.URL_BASE}/mission-files/${id}/download`;
+
+        return this.http.get(url, {
+            headers: {
+                'Content-Type': 'application/octet-stream',
+            },
+            responseType: 'blob',
+        });
+    }
 }

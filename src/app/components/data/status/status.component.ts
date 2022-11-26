@@ -20,9 +20,10 @@ export class StatusComponent extends AbstractDataComponent implements OnInit {
     constructor(
         private service: StatusService,
         private router: Router,
-        authGuard: AuthGuard
+        authGuard: AuthGuard,
+        messageService: MessageService
     ) {
-        super(authGuard);
+        super(authGuard, messageService);
 
         this.canManage = this.hasPermission(
             StatusComponent.MANAGE_PERMISSION_LEVEL

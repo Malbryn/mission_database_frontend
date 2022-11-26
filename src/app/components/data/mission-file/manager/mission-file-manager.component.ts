@@ -130,7 +130,7 @@ export class MissionFileManagerComponent
     }
 
     async downloadMissionFile(id: number, fileName: string): Promise<void> {
-        this.missionFileService.downloadFile(id).subscribe({
+        this.missionFileService.downloadMissionFile(id).subscribe({
             next: async (response) => {
                 try {
                     await saveAs(response, `${fileName}.pbo`);

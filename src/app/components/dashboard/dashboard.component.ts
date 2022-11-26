@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit {
     menuItems: MenuItem[] = [];
 
-    constructor(private authService: AuthService, private router: Router) {}
+    constructor(public authService: AuthService, private router: Router) {}
 
     ngOnInit() {
         if (!this.authService.currentUser.value.id) {
