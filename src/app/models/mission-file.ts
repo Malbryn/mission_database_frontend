@@ -8,6 +8,7 @@ export interface MissionFile extends AbstractData {
     version: number;
     path: string;
     downloadUrl: string;
+    sha: string;
     description: string;
     createdBy: User;
     createdAt: string;

@@ -42,6 +42,11 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/data/dlcs'],
                     },
                     {
+                        label: 'Frameworks',
+                        icon: 'pi pi-fw pi-angle-right',
+                        routerLink: ['/data/frameworks'],
+                    },
+                    {
                         label: 'Game types',
                         icon: 'pi pi-fw pi-angle-right',
                         routerLink: ['/data/game-types'],

@@ -15,6 +15,7 @@ import { MissionService } from './services/mission.service';
 import { MissionFileService } from './services/mission-file.service';
 import { ModsetService } from './services/modset.service';
 import { StatusService } from './services/status.service';
+import { FrameworkService } from './services/framework.service';
 
 @NgModule({
     declarations: [AppComponent, NotFoundComponent],
@@ -25,6 +26,7 @@ import { StatusService } from './services/status.service';
         AuthService,
         AuthGuard,
         DLCService,
+        FrameworkService,
         GameTypeService,
         MapService,
         MissionService,

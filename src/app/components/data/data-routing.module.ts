@@ -16,6 +16,15 @@ import { UserRole } from '../../models/user-role';
                 data: { role: UserRole.CREATOR },
             },
             {
+                path: 'frameworks',
+                loadChildren: () =>
+                    import('./framework/framework.module').then(
+                        (module) => module.FrameworkModule
+                    ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
+            },
+            {
                 path: 'game-types',
                 loadChildren: () =>
                     import('./game-type/game-type.module').then(

@@ -136,6 +136,12 @@
                                             </div>
                                         </li>
                                         <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Notes</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.notes}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                                             <div class="text-500 w-6 md:w-2 font-medium">Minimum slots</div>
                                             <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                                                 {{mission.slotsMin}}
@@ -153,16 +159,29 @@
                                                 <p-chip *ngFor="let dlc of mission.dlcs" [label]="dlc.name" class="mr-2"></p-chip>
                                             </div>
                                         </li>
-                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
-                                            <div class="text-500 w-6 md:w-2 font-medium">Created</div>
-                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
-                                                {{mission.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
-                                            </div>
-                                        </li>
+
                                         <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
                                             <div class="text-500 w-6 md:w-2 font-medium">Modset</div>
                                             <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
                                                 <a [href]="mission.modset.link" target="_blank">{{mission.modset.name}}</a>
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Framework</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.framework.name}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Created by</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.createdBy.username}}
+                                            </div>
+                                        </li>
+                                        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+                                            <div class="text-500 w-6 md:w-2 font-medium">Created at</div>
+                                            <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+                                                {{mission.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
                                             </div>
                                         </li>
                                     </ul>
@@ -175,19 +194,19 @@
                                                 <ng-template pTemplate="header">
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Name</th>
                                                         <th>Version</th>
                                                         <th>Description</th>
-                                                        <th>Uploaded</th>
+                                                        <th>Uploaded by</th>
+                                                        <th>Created</th>
                                                         <th style="width: 4rem"></th>
                                                     </tr>
                                                 </ng-template>
                                                 <ng-template pTemplate="body" let-missionFile>
                                                     <tr>
                                                         <td style="width: 2.5%; min-width: 6rem;">{{missionFile.id}}</td>
-                                                        <td style="width: 35%; min-width: 12rem;">{{missionFile.name}}</td>
                                                         <td style="width: 2.5%; min-width: 6rem;">{{missionFile.version}}</td>
-                                                        <td style="width: 50%; min-width: 12rem;">{{missionFile.description}}</td>
+                                                        <td style="width: 75%; min-width: 12rem;">{{missionFile.description}}</td>
+                                                        <td style="width: 10%; min-width: 12rem;">{{missionFile.createdBy.username}}</td>
                                                         <td style="width: 10%; min-width: 12rem;">{{missionFile.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}</td>
                                                         <td><p-button type="button" icon="pi pi-download" (onClick)="downloadMissionFile(missionFile.id, missionFile.name)"></p-button></td>
                                                     </tr>

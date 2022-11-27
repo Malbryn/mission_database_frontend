@@ -45,6 +45,7 @@ export class MissionFileManagerComponent
             version: new FormControl(),
             path: new FormControl(),
             downloadUrl: new FormControl(),
+            sha: new FormControl(),
             description: new FormControl(),
             createdAt: new FormControl(),
             createdBy: new FormControl(),
@@ -71,6 +72,17 @@ export class MissionFileManagerComponent
     }
 
     override handleEdit(data: MissionFile) {
+        // Mission file has no mission attached to it
+        if (!data.mission) {
+            this.showToastMessage(
+                MessageType.WARNING,
+                "Mission file doesn't belong to any mission. Select an existing one or delete this mission file.",
+                10000
+            );
+
+            data.mission = {} as Mission;
+        }
+
         this.form.setValue({
             ...data,
             file: {} as File,
@@ -157,6 +169,7 @@ export class MissionFileManagerComponent
             version: missionFile.version,
             path: missionFile.path,
             downloadUrl: missionFile.downloadUrl,
+            sha: missionFile.sha,
             description: missionFile.description,
             createdById: userId,
             file: missionFile.file,

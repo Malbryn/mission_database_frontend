@@ -6,6 +6,7 @@ import { Modset } from './modset';
 import { DLC } from './dlc';
 import { MissionFile } from './mission-file';
 import { AbstractData } from './abstract-data';
+import { Framework } from './framework';
 
 export interface Mission extends AbstractData {
     name: string;
@@ -18,7 +19,9 @@ export interface Mission extends AbstractData {
     createdBy: User;
     status: Status;
     modset: Modset;
+    framework: Framework;
     dlcs: DLC[];
     description: string;
+    notes: string;
     missionFiles: MissionFile[];
 }

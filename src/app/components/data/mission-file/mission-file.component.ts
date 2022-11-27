@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AbstractDataComponent } from '../common/abstract-data.component';
 import { AuthGuard } from '../../../helpers/auth.guard';
 import { UserRole } from '../../../models/user-role';
+import { saveAs } from 'file-saver';
 
 @Component({
     templateUrl: './mission-file.component.html',
@@ -41,6 +42,19 @@ export class MissionFileComponent
         this.service.getAll().subscribe((data: MissionFile[]) => {
             this.missionFiles = data;
             this.isLoading = false;
+        });
+    }
+
+    async downloadMissionFile(id: number, fileName: string): Promise<void> {
+        this.service.downloadMissionFile(id).subscribe({
+            next: async (response) => {
+                try {
+                    await saveAs(response, `${fileName}.pbo`);
+                } catch (error) {
+                    this.handleError(error);
+                }
+            },
+            error: (error) => this.handleError(error),
         });
     }
 }

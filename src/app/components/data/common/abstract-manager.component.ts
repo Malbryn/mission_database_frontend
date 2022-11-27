@@ -75,6 +75,9 @@ export abstract class AbstractManagerComponent<T extends AbstractData>
             } else {
                 this.create(formData);
             }
+
+            // Fixes an issue with sorted tables where the table won't refresh
+            this.data = [...this.data];
         } else {
             this.showToastMessage(MessageType.WARNING, 'Invalid input data');
         }
@@ -181,6 +184,9 @@ export abstract class AbstractManagerComponent<T extends AbstractData>
             next: (value: T) => {
                 this.data.push(value);
 
+                // Fixes an issue with sorted tables where the table won't refresh
+                this.data = [...this.data];
+
                 this.setLoadingState(false);
                 this.showToastMessage(
                     MessageType.SUCCESS,
@@ -196,6 +202,9 @@ export abstract class AbstractManagerComponent<T extends AbstractData>
             next: (value: T) => {
                 const index = this.findIndexById(formData.id, this.data);
                 this.data[index] = value;
+
+                // Fixes an issue with sorted tables where the table won't refresh
+                this.data = [...this.data];
 
                 this.setLoadingState(false);
                 this.showToastMessage(

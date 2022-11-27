@@ -10,6 +10,8 @@ export interface MissionDto extends AbstractData {
     createdById: number;
     statusId: number;
     modsetId: number;
+    frameworkId: number;
     dlcs: number[];
     description: string;
+    notes: string;
 }

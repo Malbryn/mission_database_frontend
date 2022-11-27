@@ -79,10 +79,6 @@
                             Game type
                             <p-sortIcon field="gameType"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="slotsMin">
-                            Min. slots
-                            <p-sortIcon field="slotsMin"></p-sortIcon>
-                        </th>
                         <th pSortableColumn="slotsMax">
                             Max. slots
                             <p-sortIcon field="slotsMax"></p-sortIcon>
@@ -99,24 +95,12 @@
                             Status
                             <p-sortIcon field="status"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="modset">
-                            Modset
-                            <p-sortIcon field="modset"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="dlc">
-                            DLC
-                            <p-sortIcon field="dlc"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="description">
-                            Description
-                            <p-sortIcon field="description"></p-sortIcon>
-                        </th>
                         <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-mission>
                     <tr>
-                        <td style="min-width: 12rem">
+                        <td style="min-width: 6rem">
                             <span class="p-column-title">ID</span>
                             {{ mission.id }}
                         </td>
@@ -135,10 +119,6 @@
                         <td style="min-width: 12rem">
                             <span class="p-column-title">Game type</span>
                             {{ mission.gameType.name }}
-                        </td>
-                        <td style="min-width: 12rem">
-                            <span class="p-column-title">Min. slots</span>
-                            {{ mission.slotsMin }}
                         </td>
                         <td style="min-width: 12rem">
                             <span class="p-column-title">Max. slots</span>
@@ -163,22 +143,6 @@
                                 "
                                 >{{ mission.status.name }}</span
                             >
-                        </td>
-                        <td style="min-width: 12rem">
-                            <span class="p-column-title">Modset</span>
-                            {{ mission.modset.name }}
-                        </td>
-                        <td style="min-width: 12rem">
-                            <span class="p-column-title">DLC</span>
-                            <p-chip
-                                *ngFor="let dlc of mission.dlcs"
-                                [label]="dlc.name"
-                                class="mr-2"
-                            ></p-chip>
-                        </td>
-                        <td style="min-width: 24rem">
-                            <span class="p-column-title">Description</span>
-                            {{ mission.description }}
                         </td>
                         <td>
                             <div class="flex">
@@ -205,10 +169,10 @@
 
         <p-dialog
             [(visible)]="newDialog"
-            [style]="{ width: '1200px', height: '100%' }"
+            [style]="{ width: '1200px' }"
             header="Mission"
             [modal]="true"
-            class="p-fluid"
+            class="p-fluid xl:max-h-10rem"
         >
             <ng-template pTemplate="content">
                 <form
@@ -266,6 +230,19 @@
                                 </p-autoComplete>
                             </div>
                             <div class="col-12 md:col-4">
+                                <label for="framework">Framework</label>
+                                <p-autoComplete
+                                    id="framework"
+                                    formControlName="framework"
+                                    field="name"
+                                    [required]="true"
+                                    [suggestions]="filteredFrameworks"
+                                    [dropdown]="true"
+                                    (completeMethod)="filterFramework($event)"
+                                >
+                                </p-autoComplete>
+                            </div>
+                            <div class="col-12 md:col-2">
                                 <label for="slotsMin">Min. slots</label>
                                 <p-inputNumber
                                     id="slotsMin"
@@ -277,7 +254,7 @@
                                     [required]="true"
                                 ></p-inputNumber>
                             </div>
-                            <div class="col-12 md:col-4">
+                            <div class="col-12 md:col-2">
                                 <label for="slotsMax">Max. slots</label>
                                 <p-inputNumber
                                     id="slotsMax"
@@ -289,42 +266,7 @@
                                     [required]="true"
                                 ></p-inputNumber>
                             </div>
-                            <div class="col-12 md:col-8">
-                                <label for="name">DLC</label>
-                                <div
-                                    class="col-12 md:col-12 flex align-content-start flex-wrap"
-                                >
-                                    <div
-                                        *ngFor="let dlc of DLCs"
-                                        class="field-checkbox pr-4"
-                                    >
-                                        <!-- FormControl workaround (https://github.com/primefaces/primeng/issues/2906) -->
-                                        <p-checkbox
-                                            name="dlcGroup"
-                                            [formControl]="$any(form.controls['dlcs'])"
-                                            [label]="dlc.name"
-                                            [value]="dlc"
-                                        ></p-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-4">
-                                <label for="name">Game type</label>
-                                <div class="col-12 md:col-12">
-                                    <div
-                                        *ngFor="let gameTypeOption of gameTypes"
-                                        class="field-radiobutton"
-                                    >
-                                        <p-radioButton
-                                            name="gameType"
-                                            formControlName="gameType"
-                                            [label]="gameTypeOption.name"
-                                            [value]="gameTypeOption.id"
-                                        ></p-radioButton>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 md:col-8">
+                            <div class="col-12 md:col-9">
                                 <label for="description">Description</label>
                                 <div class="col-12 md:col-12">
                                     <textarea
@@ -340,7 +282,39 @@
                                     ></textarea>
                                 </div>
                             </div>
-                            <div class="col-12 md:col-4">
+                            <div class="col-12 md:col-3">
+                                <label for="name">Game type</label>
+                                <div class="col-12 md:col-12">
+                                    <div
+                                        *ngFor="let gameTypeOption of gameTypes"
+                                        class="field-radiobutton"
+                                    >
+                                        <p-radioButton
+                                            name="gameType"
+                                            formControlName="gameType"
+                                            [label]="gameTypeOption.name"
+                                            [value]="gameTypeOption.id"
+                                        ></p-radioButton>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-9">
+                                <label for="notes">Notes</label>
+                                <div class="col-12 md:col-12">
+                                    <textarea
+                                        id="notes"
+                                        type="text"
+                                        formControlName="notes"
+                                        pInputTextarea
+                                        style="resize: none; width: inherit"
+                                        class="p-inputtextarea p-inputtext p-component p-element"
+                                        [rows]="8"
+                                        [autoResize]="true"
+                                        [required]="true"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-3">
                                 <label for="name">Status</label>
                                 <div class="col-12 md:col-12">
                                     <div
@@ -361,6 +335,25 @@
                                             "
                                             >{{ status.name }}</label
                                         >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-12">
+                                <label for="name">DLC</label>
+                                <div
+                                    class="col-12 md:col-12 flex align-content-start flex-wrap"
+                                >
+                                    <div
+                                        *ngFor="let dlc of DLCs"
+                                        class="field-checkbox pr-4"
+                                    >
+                                        <!-- FormControl workaround (https://github.com/primefaces/primeng/issues/2906) -->
+                                        <p-checkbox
+                                            name="dlcGroup"
+                                            [formControl]="$any(form.controls['dlcs'])"
+                                            [label]="dlc.name"
+                                            [value]="dlc"
+                                        ></p-checkbox>
                                     </div>
                                 </div>
                             </div>

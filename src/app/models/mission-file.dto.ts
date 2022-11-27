@@ -6,6 +6,7 @@ export interface MissionFileDto extends AbstractData {
     version: number;
     path: string;
     downloadUrl: string;
+    sha: string;
     description: string;
     createdById: number;
     createdAt: string;

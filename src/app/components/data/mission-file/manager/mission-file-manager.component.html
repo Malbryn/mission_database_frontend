@@ -31,17 +31,20 @@
                         <th pSortableColumn="id">ID
                             <p-sortIcon field="id"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="name">Name
-                            <p-sortIcon field="name"></p-sortIcon>
+                        <th pSortableColumn="name">Mission
+                            <p-sortIcon field="mission"></p-sortIcon>
                         </th>
                         <th pSortableColumn="version">Version
                             <p-sortIcon field="version"></p-sortIcon>
                         </th>
+                        <th pSortableColumn="name">Filename
+                            <p-sortIcon field="name"></p-sortIcon>
+                        </th>
                         <th pSortableColumn="path">Path
                             <p-sortIcon field="path"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="description">Description
-                            <p-sortIcon field="description"></p-sortIcon>
+                        <th pSortableColumn="createdBy">Uploaded by
+                            <p-sortIcon field="createdBy"></p-sortIcon>
                         </th>
                         <th pSortableColumn="createdAt">Created
                             <p-sortIcon field="createdAt"></p-sortIcon>
@@ -54,21 +57,32 @@
                         <td style="width: 2.5%; min-width: 6rem;"><span class="p-column-title">ID</span>
                             {{missionFile.id}}
                         </td>
-                        <td style="width: 20%; min-width: 12rem;">
-                            <span class="p-column-title">Name</span>
-                            {{missionFile.name}}
+                        <td style="width: 20%; min-width: 12rem">
+                            <p-tag
+                                *ngIf="!missionFile.mission; else validMission"
+                                severity="danger"
+                                value="Mission not found"
+                                icon="pi pi-ban"
+                            ></p-tag>
+                            <ng-template #validMission>{{
+                                missionFile.mission.name
+                                }}</ng-template>
                         </td>
                         <td style="width: 2.5%; min-width: 6rem;">
                             <span class="p-column-title">Version</span>
                             {{missionFile.version}}
                         </td>
                         <td style="width: 20%; min-width: 12rem;">
+                            <span class="p-column-title">Filename</span>
+                            {{missionFile.name}}
+                        </td>
+                        <td style="width: 20%; min-width: 12rem;">
                             <span class="p-column-title">Path</span>
                             {{missionFile.path}}
                         </td>
                         <td style="width: 40%; min-width: 12rem;">
-                            <span class="p-column-title">Description</span>
-                            {{missionFile.description}}
+                            <span class="p-column-title">Uploaded by</span>
+                            {{missionFile.createdBy.username}}
                         </td>
                         <td style="width: 10%; min-width: 12rem;">
                             <span class="p-column-title">Created</span>
@@ -93,7 +107,7 @@
         <p-dialog [(visible)]="newDialog" [style]="{width: '600px'}" header="Mission file" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <form id="missionFileForm" enctype="multipart/form-data" [formGroup]="form" (ngSubmit)="handleSave()">
-                    <div *ngIf="!form.controls['id'].value" class="field">
+                    <div class="field">
                         <label for="mission">Mission</label>
                         <p-autoComplete id="mission" formControlName="mission" field="name" [required]="true"
                                         [suggestions]="filteredMissions" [dropdown]="true" (completeMethod)="filterMission($event)">
@@ -105,8 +119,9 @@
                                        [min]="0" [max]="999">
                         </p-inputNumber>
                     </div>
-                    <div class="field">
-                        <label for="name">Name</label>
+                    <!-- Temporarily disabled -->
+                    <div *ngIf="form.controls['id'].value" class="field">
+                        <label for="name">Filename</label>
                         <input id="name" type="text" formControlName="name" pInputText [required]="true"/>
                     </div>
                     <!-- Temporarily disabled -->
@@ -126,7 +141,7 @@
                         </textarea>
                     </div>
                     <div *ngIf="!form.controls['id'].value" class="field">
-                        <label for="file">Upload mission file</label>
+                        <label for="file">Upload mission file (max. 10MB)</label>
                         <p-fileUpload id="file" formControlName="file" name="uploadedMissionFile" accept=".pbo" ngDefaultControl [required]="true"
                                       [maxFileSize]="10000000" [fileLimit]="1" [showUploadButton]="false" [showCancelButton]="false" [previewWidth]="0"
                                       [customUpload]="true" (onSelect)="onFileSelect($event)">

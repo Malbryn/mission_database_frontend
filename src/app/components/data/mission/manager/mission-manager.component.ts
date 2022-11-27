@@ -19,6 +19,8 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { MessageType } from '../../../../models/message-type';
 import { MissionDto } from '../../../../models/mission.dto';
 import { AbstractData } from '../../../../models/abstract-data';
+import { Framework } from '../../../../models/framework';
+import { FrameworkService } from '../../../../services/framework.service';
 
 @Component({
     templateUrl: './mission-manager.component.html',
@@ -33,10 +35,12 @@ export class MissionManagerComponent
     gameTypes: GameType[] = [];
     statuses: Status[] = [];
     modsets: Modset[] = [];
+    frameworks: Framework[] = [];
     DLCs: DLC[] = [];
 
     filteredMaps: Map[] = [];
     filteredModsets: Modset[] = [];
+    filteredFrameworks: Framework[] = [];
 
     constructor(
         router: Router,
@@ -48,6 +52,7 @@ export class MissionManagerComponent
         private gameTypeService: GameTypeService,
         private statusService: StatusService,
         private modsetService: ModsetService,
+        private frameworkService: FrameworkService,
         private dlcService: DLCService
     ) {
         super(router, formBuilder, authService, messageService, service);
@@ -64,8 +69,10 @@ export class MissionManagerComponent
             createdBy: new FormControl(),
             status: new FormControl(),
             modset: new FormControl(),
+            framework: new FormControl(),
             dlcs: new FormControl(),
             description: new FormControl(),
+            notes: new FormControl(),
             missionFiles: new FormControl(),
         });
     }
@@ -97,6 +104,13 @@ export class MissionManagerComponent
         this.modsetService.getAll().subscribe({
             next: (data: Modset[]) => {
                 this.modsets = data;
+            },
+            error: (error) => this.handleError(error),
+        });
+
+        this.frameworkService.getAll().subscribe({
+            next: (data: Framework[]) => {
+                this.frameworks = data;
             },
             error: (error) => this.handleError(error),
         });
@@ -174,6 +188,21 @@ export class MissionManagerComponent
         this.filteredModsets = filtered;
     }
 
+    filterFramework(event: any): void {
+        const filtered: Framework[] = [];
+        const query = event.query;
+
+        for (const framework of this.frameworks) {
+            if (
+                framework.name.toLowerCase().indexOf(query.toLowerCase()) === 0
+            ) {
+                filtered.push(framework);
+            }
+        }
+
+        this.filteredFrameworks = filtered;
+    }
+
     private convertToDto(mission: Mission): MissionDto {
         const userId = this.authService.currentUser.value.id;
 
@@ -188,8 +217,10 @@ export class MissionManagerComponent
             createdById: userId,
             statusId: mission.status.id,
             modsetId: mission.modset.id,
+            frameworkId: mission.framework.id,
             dlcs: mission.dlcs.map((element: DLC) => element.id),
             description: mission.description,
+            notes: mission.notes,
         } as MissionDto;
     }
 
