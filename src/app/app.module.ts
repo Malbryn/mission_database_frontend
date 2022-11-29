@@ -16,6 +16,7 @@ import { MissionFileService } from './services/mission-file.service';
 import { ModsetService } from './services/modset.service';
 import { StatusService } from './services/status.service';
 import { FrameworkService } from './services/framework.service';
+import { UserService } from './services/user.service';
 
 @NgModule({
     declarations: [AppComponent, NotFoundComponent],
@@ -33,6 +34,7 @@ import { FrameworkService } from './services/framework.service';
         MissionFileService,
         ModsetService,
         StatusService,
+        UserService,
     ],
     bootstrap: [AppComponent],
 })

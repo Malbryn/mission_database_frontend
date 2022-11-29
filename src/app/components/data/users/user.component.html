@@ -1,0 +1,134 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <p-toolbar *ngIf="canManage" styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Manage" icon="pi pi-pencil"
+                                class="p-button-info mr-2" (click)="manage()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <h5>Filter Menu</h5>
+            <p-table #dt1 [value]="users" dataKey="id" [rows]="20" [loading]="isLoading" [rowHover]="true"
+                     [paginator]="true" [showCurrentPageReport]="true" [globalFilterFields]="['name']"
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                     responsiveLayout="scroll" sortField="id"
+            >
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-content-between flex-column sm:flex-row">
+                        <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash"
+                                (click)="clear(dt1)"></button>
+                        <span class="p-input-icon-left mb-2">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)"
+                                   placeholder="Search Keyword" class="w-full"/>
+						</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                ID
+                                <p-columnFilter type="text" field="id" display="menu"
+                                                placeholder="Search by ID"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Name
+                                <p-columnFilter type="text" field="name" display="menu"
+                                                placeholder="Search by name"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Registered
+                                <p-columnFilter type="text" field="createdAt" display="menu"
+                                                placeholder="Search by registered"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Last login
+                                <p-columnFilter type="text" field="lastLogin" display="menu"
+                                                placeholder="Search by last login"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Member
+                                <p-columnFilter type="text" field="isMember" display="menu"
+                                                placeholder="Search by member"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Creator
+                                <p-columnFilter type="text" field="isCreator" display="menu"
+                                                placeholder="Search by creator"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Staff
+                                <p-columnFilter type="text" field="isStaff" display="menu"
+                                                placeholder="Search by staff"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Admin
+                                <p-columnFilter type="text" field="isAdmin" display="menu"
+                                                placeholder="Search by admin"></p-columnFilter>
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+                        <td style="width: 2.5%; min-width: 6rem;">
+                            {{user.id}}
+                        </td>
+                        <td style="width: 27.5%; min-width: 12rem;">
+                            {{user.username}}
+                        </td>
+                        <td style="width: 25%; min-width: 12rem;">
+                            {{user.createdAt | date: 'yyyy-MM-dd, hh:mm a'}}
+                        </td>
+                        <td style="width: 25%; min-width: 12rem;">
+                            {{user.lastLogin | date: 'yyyy-MM-dd, hh:mm a'}}
+                        </td>
+                        <td style="width: 5%; min-width: 12rem;">
+                            <i *ngIf="user.isMember; else notMember" class="pi pi-check"></i>
+                            <ng-template #notMember>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td style="width: 5%; min-width: 12rem;">
+                            <i *ngIf="user.isCreator; else notCreator" class="pi pi-check"></i>
+                            <ng-template #notCreator>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td style="width: 5%; min-width: 12rem;">
+                            <i *ngIf="user.isStaff; else notStaff" class="pi pi-check"></i>
+                            <ng-template #notStaff>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td style="width: 5%; min-width: 12rem;">
+                            <i *ngIf="user.isAdmin; else notAdmin" class="pi pi-check"></i>
+                            <ng-template #notAdmin>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+

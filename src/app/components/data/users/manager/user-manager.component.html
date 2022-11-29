@@ -1,0 +1,266 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button
+                            pButton
+                            pRipple
+                            label="Back"
+                            icon="pi pi-arrow-left"
+                            class="p-button-info mr-2"
+                            (click)="goBack('users')"
+                        ></button>
+                        <button
+                            *ngIf="false"
+                            pButton
+                            pRipple
+                            label="New"
+                            icon="pi pi-plus"
+                            class="p-button-success mr-2"
+                            (click)="handleCreate()"
+                        ></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table
+                #dt
+                [value]="data"
+                [columns]="cols"
+                responsiveLayout="scroll"
+                [loading]="isLoading"
+                [globalFilterFields]="['name']"
+                [rows]="20"
+                [paginator]="true"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowHover]="true"
+                dataKey="id"
+                sortField="id"
+            >
+                <ng-template pTemplate="caption">
+                    <div
+                        class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    >
+                        <h5 class="m-0">Manage users</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="onGlobalFilter(dt, $event)"
+                                placeholder="Search..."
+                                class="w-full sm:w-auto"
+                            />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="id">
+                            ID
+                            <p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="name">
+                            Name
+                            <p-sortIcon field="name"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="createdAt">
+                            Registered
+                            <p-sortIcon field="createdAt"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="lastLogin">
+                            Last login
+                            <p-sortIcon field="lastLogin"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="isMember">
+                            Member
+                            <p-sortIcon field="isMember"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="isCreator">
+                            Creator
+                            <p-sortIcon field="isCreator"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="isStaff">
+                            Staff
+                            <p-sortIcon field="isStaff"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="isAdmin">
+                            Admin
+                            <p-sortIcon field="isAdmin"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+                        <td style="width: 2.5%; min-width: 6rem">
+                            <span class="p-column-title">ID</span>
+                            {{ user.id }}
+                        </td>
+                        <td style="width: 27.5%; min-width: 12rem">
+                            <span class="p-column-title">Name</span>
+                            {{ user.username }}
+                        </td>
+                        <td style="width: 25%; min-width: 12rem">
+                            <span class="p-column-title">Registered</span>
+                            {{ user.createdAt | date: "yyyy-MM-dd, hh:mm a" }}
+                        </td>
+                        <td style="width: 25%; min-width: 12rem">
+                            <span class="p-column-title">Last login</span>
+                            {{ user.lastLogin | date: "yyyy-MM-dd, hh:mm a" }}
+                        </td>
+                        <td style="width: 5%; min-width: 12rem">
+                            <span class="p-column-title">Member</span>
+                            <i
+                                *ngIf="user.isMember; else notMember"
+                                class="pi pi-check"
+                            ></i>
+                            <ng-template #notMember>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td style="width: 5%; min-width: 12rem">
+                            <span class="p-column-title">Creator</span>
+                            <i
+                                *ngIf="user.isCreator; else notCreator"
+                                class="pi pi-check"
+                            ></i>
+                            <ng-template #notCreator>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td style="width: 5%; min-width: 12rem">
+                            <span class="p-column-title">Staff</span>
+                            <i
+                                *ngIf="user.isStaff; else notStaff"
+                                class="pi pi-check"
+                            ></i>
+                            <ng-template #notStaff>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td style="width: 5%; min-width: 12rem">
+                            <span class="p-column-title">Admin</span>
+                            <i
+                                *ngIf="user.isAdmin; else notAdmin"
+                                class="pi pi-check"
+                            ></i>
+                            <ng-template #notAdmin>
+                                <i class="pi pi-times"></i>
+                            </ng-template>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button
+                                    [disabled]="user.isAdmin"
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-warning mr-2"
+                                    (click)="handleEdit(user)"
+                                ></button>
+                                <button
+                                    [disabled]="user.isAdmin"
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-danger"
+                                    (click)="handleDelete(user)"
+                                ></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog
+            [(visible)]="newDialog"
+            [style]="{ width: '600px' }"
+            header="User"
+            [modal]="true"
+            class="p-fluid"
+        >
+            <ng-template pTemplate="content">
+                <form
+                    id="userForm"
+                    [formGroup]="form"
+                    (ngSubmit)="handleSave()"
+                >
+                    <label for="userForm">User role</label>
+                    <div
+                        *ngFor="let role of roles | keyvalue"
+                        class="field-radiobutton"
+                    >
+                        <p-radioButton
+                            name="role"
+                            formControlName="role"
+                            [label]="role.value"
+                            [value]="role.key"
+                        ></p-radioButton>
+                    </div>
+                </form>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    label="Cancel"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    (click)="closeNewDialog()"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    label="Save"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    (click)="handleSave()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog
+            [(visible)]="deleteDialog"
+            header="Confirm"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
+            <div class="flex align-items-center justify-content-center">
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span *ngIf="selectedValue"
+                    >Are you sure you want to delete
+                    <b>{{ selectedValue.username }}</b
+                    >?</span
+                >
+            </div>
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="No"
+                    (click)="deleteDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Yes"
+                    (click)="confirmDelete()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

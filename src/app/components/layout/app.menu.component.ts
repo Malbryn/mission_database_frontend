@@ -80,7 +80,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Users',
                         icon: 'pi pi-fw pi-angle-right',
-                        routerLink: ['/users'],
+                        routerLink: ['/data/users'],
                     },
                 ],
                 role: UserRole.ADMIN,

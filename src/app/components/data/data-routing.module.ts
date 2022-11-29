@@ -78,6 +78,15 @@ import { UserRole } from '../../models/user-role';
                 canActivate: [AuthGuard],
                 data: { role: UserRole.CREATOR },
             },
+            {
+                path: 'users',
+                loadChildren: () =>
+                    import('./users/user.module').then(
+                        (module) => module.UserModule
+                    ),
+                canActivate: [AuthGuard],
+                data: { role: UserRole.CREATOR },
+            },
             { path: '**', redirectTo: '/' },
         ]),
     ],
